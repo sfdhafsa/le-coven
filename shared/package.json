@@ -1,0 +1,10 @@
+{
+  "name": "@le-coven/shared",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1",
+  "exports": {
+    "./types": "./types/index.ts",
+    "./services": "./services/index.ts"
+  }
+}

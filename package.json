@@ -1,0 +1,21 @@
+{
+  "name": "le-coven",
+  "private": true,
+  "version": "0.0.1",
+  "workspaces": [
+    "frontend/lecoven",
+    "frontend/blue-moon",
+    "shared"
+  ],
+  "scripts": {
+    "dev:lecoven": "npm run dev --workspace=@le-coven/website",
+    "dev:blue-moon": "npm run dev --workspace=@le-coven/blue-moon",
+    "build": "npm run build:lecoven && npm run build:blue-moon",
+    "build:lecoven": "npm run build --workspace=@le-coven/website",
+    "build:blue-moon": "npm run build --workspace=@le-coven/blue-moon",
+    "dev:strapi": "npm run develop --prefix cms/strapi"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
