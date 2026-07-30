@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: lecoven
       POSTGRES_USER: lecoven_user
-      POSTGRES_PASSWORD: lecoven_dev_password
+      POSTGRES_PASSWORD: dev_password
 
     ports:
       - "5432:5432"
