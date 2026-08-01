@@ -1,1 +1,513 @@
 @import "tailwindcss";
+
+@theme {
+  --color-coven-night: #05020d;
+  --color-coven-violet: #a855f7;
+  --color-coven-fuchsia: #d946ef;
+}
+
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #05020d;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #05020d;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: #05020d;
+  color: #f8f4ff;
+  text-rendering: optimizeLegibility;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid #e879f9;
+  outline-offset: 4px;
+}
+
+.site-header {
+  position: relative;
+  z-index: 50;
+  border-bottom: 1px solid rgb(168 85 247 / 0.12);
+  background: rgb(4 1 12 / 0.94);
+  backdrop-filter: blur(18px);
+}
+
+.brand-orbit {
+  position: relative;
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid #38bdf8;
+  border-right-color: #a855f7;
+  border-bottom-color: #d946ef;
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 45%, #37145a, #090313 72%);
+  box-shadow: 0 0 20px rgb(168 85 247 / 0.2);
+}
+
+.brand-moon {
+  position: absolute;
+  width: 1.05rem;
+  height: 1.05rem;
+  transform: translateX(-0.15rem);
+  border-radius: 999px;
+  background: #f6eaff;
+  box-shadow: 0 0 12px rgb(232 121 249 / 0.8);
+}
+
+.brand-moon::after {
+  position: absolute;
+  inset: -0.08rem -0.1rem 0.08rem 0.33rem;
+  border-radius: inherit;
+  background: #21083a;
+  content: "";
+}
+
+.brand-mark {
+  position: absolute;
+  bottom: 0.2rem;
+  font-size: 0.36rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.menu-toggle {
+  position: relative;
+}
+
+.menu-toggle span {
+  position: absolute;
+  width: 1.15rem;
+  height: 1px;
+  background: currentColor;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.menu-toggle span:first-child {
+  transform: translateY(-0.34rem);
+}
+
+.menu-toggle span:last-child {
+  transform: translateY(0.34rem);
+}
+
+.menu-toggle[aria-expanded="true"] span:first-child {
+  transform: rotate(45deg);
+}
+
+.menu-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle[aria-expanded="true"] span:last-child {
+  transform: rotate(-45deg);
+}
+
+.hero-stage {
+  position: relative;
+  background: #05020d;
+  box-shadow:
+    inset 0 0 130px rgb(2 0 8 / 0.72),
+    inset 0 -110px 130px rgb(3 0 10 / 0.95);
+}
+
+.hero-slideshow {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  background: #080313;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: -2%;
+  background-position: center;
+  background-size: cover;
+  will-change: opacity, transform;
+}
+
+.hero-slide--concert {
+  background-image: url("/images/hero-concert.jfif");
+  background-position: center 42%;
+  animation: hero-slide-concert 14s ease-in-out infinite;
+}
+
+.hero-slide--performer {
+  background-image: url("/images/hero-performer.png");
+  background-position: center 38%;
+  animation: hero-slide-performer 14s ease-in-out infinite;
+}
+
+.hero-stage::before,
+.hero-stage::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+.hero-stage::before {
+  z-index: 1;
+  inset: 35% -8% -25%;
+  background:
+    radial-gradient(ellipse at 12% 100%, #020108 0 14%, transparent 14.5%),
+    radial-gradient(ellipse at 28% 100%, #04010a 0 19%, transparent 19.5%),
+    radial-gradient(ellipse at 48% 100%, #020108 0 24%, transparent 24.5%),
+    radial-gradient(ellipse at 70% 100%, #030108 0 20%, transparent 20.5%),
+    radial-gradient(ellipse at 91% 100%, #020108 0 24%, transparent 24.5%);
+  opacity: 0.88;
+}
+
+.hero-stage::after {
+  z-index: 2;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgb(5 2 13 / 0.67), rgb(5 2 13 / 0.98)),
+    radial-gradient(circle at 76% 30%, rgb(192 38 211 / 0.3), transparent 34%),
+    radial-gradient(circle at 24% 54%, rgb(91 33 182 / 0.38), transparent 43%),
+    linear-gradient(112deg, rgb(10 3 28 / 0.78), rgb(69 16 91 / 0.42), rgb(8 2 24 / 0.8)),
+    radial-gradient(ellipse at center, transparent 28%, rgb(4 1 14 / 0.4) 72%, rgb(2 0 8 / 0.84) 100%),
+    linear-gradient(90deg, rgb(4 1 13 / 0.84), transparent 22%, transparent 78%, rgb(4 1 13 / 0.84)),
+    linear-gradient(0deg, rgb(4 1 13 / 0.88), transparent 52%);
+}
+
+.hero-grid {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  opacity: 0.08;
+  background-image:
+    linear-gradient(rgb(216 180 254 / 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(216 180 254 / 0.15) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, transparent, black 35%, transparent);
+}
+
+.cosmic-star {
+  position: absolute;
+  z-index: 4;
+  color: rgb(217 70 239 / 0.55);
+  font-size: clamp(1.25rem, 2vw, 2rem);
+  text-shadow: 0 0 18px rgb(217 70 239 / 0.7);
+  animation: star-pulse 3.6s ease-in-out infinite;
+}
+
+.hero-emblem {
+  position: relative;
+  display: grid;
+  width: 8.8rem;
+  height: 8.8rem;
+  place-items: center;
+  border: 3px solid #38bdf8;
+  border-right-color: #a855f7;
+  border-bottom-color: #d946ef;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgb(92 38 128 / 0.72), rgb(8 3 20 / 0.92) 70%);
+  box-shadow: 0 0 45px rgb(168 85 247 / 0.24);
+}
+
+.hero-emblem__moon {
+  position: absolute;
+  top: 2.45rem;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 999px;
+  background: #f9efff;
+  box-shadow: 0 0 13px rgb(255 255 255 / 0.45);
+}
+
+.hero-emblem__moon::after {
+  position: absolute;
+  inset: -0.08rem;
+  border-radius: inherit;
+  background: #3a1457;
+  content: "";
+}
+
+.hero-emblem__moon--left {
+  left: 2.15rem;
+}
+
+.hero-emblem__moon--left::after {
+  transform: translateX(0.45rem);
+}
+
+.hero-emblem__moon--right {
+  right: 2.15rem;
+}
+
+.hero-emblem__moon--right::after {
+  transform: translateX(-0.45rem);
+}
+
+.hero-emblem__diamond {
+  width: 2.15rem;
+  height: 2.15rem;
+  transform: rotate(45deg);
+  border-right: 1px solid rgb(245 208 254 / 0.72);
+  border-bottom: 1px solid rgb(245 208 254 / 0.72);
+}
+
+.hero-emblem__name {
+  position: absolute;
+  bottom: 1.25rem;
+  font-family: Georgia, serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.48em;
+  text-indent: 0.48em;
+  color: #f3d9ff;
+}
+
+.hero-title {
+  filter: drop-shadow(0 18px 18px rgb(0 0 0 / 0.4));
+}
+
+.button-primary,
+.button-secondary {
+  display: inline-flex;
+  min-height: 3.4rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  border-radius: 999px;
+  padding: 0.85rem 1.9rem;
+  font-weight: 700;
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.button-primary {
+  background: linear-gradient(135deg, #c84bea, #a33ccc);
+  color: #100318;
+  box-shadow: 0 0 30px rgb(192 61 222 / 0.3);
+}
+
+.button-secondary {
+  border: 1px solid rgb(168 85 247 / 0.42);
+  background: rgb(18 5 34 / 0.45);
+  color: rgb(216 180 254 / 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.button-primary:hover,
+.button-secondary:hover {
+  transform: translateY(-2px);
+}
+
+.button-primary:hover {
+  box-shadow: 0 0 38px rgb(217 70 239 / 0.45);
+}
+
+.button-secondary:hover {
+  border-color: rgb(216 180 254 / 0.7);
+  background: rgb(88 28 135 / 0.25);
+  color: #f3e8ff;
+}
+
+@keyframes star-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.1) rotate(15deg);
+  }
+}
+
+@keyframes hero-slide-concert {
+  0%,
+  43% {
+    opacity: 1;
+    transform: scale(1.03) translateX(0);
+  }
+  50%,
+  93% {
+    opacity: 0;
+    transform: scale(1.1) translateX(-1.5%);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.03) translateX(0);
+  }
+}
+
+@keyframes hero-slide-performer {
+  0%,
+  43% {
+    opacity: 0;
+    transform: scale(1.1) translateX(1.5%);
+  }
+  50%,
+  93% {
+    opacity: 1;
+    transform: scale(1.03) translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1) translateX(1.5%);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-stage {
+    min-height: calc(100svh - 4.5rem);
+  }
+
+  .hero-emblem {
+    width: 6.8rem;
+    height: 6.8rem;
+  }
+
+  .hero-emblem__moon {
+    top: 1.75rem;
+    transform: scale(0.8);
+  }
+
+  .hero-emblem__moon--left {
+    left: 1.45rem;
+  }
+
+  .hero-emblem__moon--right {
+    right: 1.45rem;
+  }
+
+  .hero-emblem__name {
+    bottom: 0.9rem;
+    font-size: 0.58rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .hero-slide--concert {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-slide--performer {
+    display: none;
+  }
+}
+
+.site-footer {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgb(168 85 247 / 0.1);
+  background:
+    radial-gradient(circle at 20% 22%, rgb(88 28 135 / 0.16), transparent 30%),
+    radial-gradient(circle at 78% 45%, rgb(107 33 168 / 0.12), transparent 32%),
+    linear-gradient(110deg, #0b0314 0%, #10031a 45%, #06020f 100%);
+}
+
+.site-footer::before {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(216 180 254 / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(216 180 254 / 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  content: "";
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.site-footer > div {
+  position: relative;
+  z-index: 1;
+}
+
+.footer-heading {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: rgb(216 180 254 / 0.8);
+}
+
+.footer-link {
+  color: rgb(196 181 253 / 0.43);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.footer-link:hover {
+  color: rgb(237 233 254 / 0.92);
+}
+
+.footer-orbit {
+  position: relative;
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  overflow: hidden;
+  border: 1.5px solid #38bdf8;
+  border-right-color: #a855f7;
+  border-bottom-color: #d946ef;
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 45%, #37145a, #090313 72%);
+  box-shadow: 0 0 18px rgb(168 85 247 / 0.16);
+}
+
+.footer-moon {
+  position: absolute;
+  width: 0.95rem;
+  height: 0.95rem;
+  transform: translateX(-0.13rem);
+  border-radius: 999px;
+  background: #f6eaff;
+}
+
+.footer-moon::after {
+  position: absolute;
+  inset: -0.08rem -0.1rem 0.08rem 0.3rem;
+  border-radius: inherit;
+  background: #21083a;
+  content: "";
+}
+
+.footer-mark {
+  position: absolute;
+  bottom: 0.16rem;
+  font-size: 0.32rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}

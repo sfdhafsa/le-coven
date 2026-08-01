@@ -1,19 +1,59 @@
 ---
-import "../styles/global.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<!doctype html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content="Site officiel de l'association Le Coven" />
-    <title>Le Coven</title>
-  </head>
-  <body class="min-h-screen bg-slate-950 text-slate-100">
-    <main class="grid min-h-screen place-items-center px-6">
-      <h1 class="text-4xl font-bold">Le Coven</h1>
-    </main>
-  </body>
-</html>
+<BaseLayout
+  title="Le Coven — Fédération des collectifs électroniques"
+  description="Le Coven fédère les collectifs de musiques électroniques des Hauts-de-France et soutient la création, la diffusion et les cultures alternatives."
+>
+  <section class="hero-stage isolate flex min-h-[calc(100svh-4.5rem)] items-center overflow-hidden px-5 py-12 sm:px-8 lg:px-12">
+    <div class="hero-slideshow" aria-hidden="true">
+      <span class="hero-slide hero-slide--concert"></span>
+      <span class="hero-slide hero-slide--performer"></span>
+    </div>
+
+    <div class="hero-grid" aria-hidden="true"></div>
+    <span class="cosmic-star left-[7%] top-[10%]" aria-hidden="true">✦</span>
+    <span class="cosmic-star right-[10%] top-[20%]" aria-hidden="true">✦</span>
+    <span class="cosmic-star bottom-[13%] right-[7%]" aria-hidden="true">✦</span>
+
+    <div class="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
+      <img
+        class="mb-8 size-28 rounded-full border-2 border-violet-400/35 object-cover shadow-[0_0_45px_rgba(168,85,247,0.3)] sm:size-36"
+        src="/images/logo-le-coven.jpeg"
+        alt="Logo Le Coven"
+        width="288"
+        height="288"
+        fetchpriority="high"
+      />
+
+      <p class="mb-7 rounded-full border border-violet-400/30 bg-violet-950/25 px-5 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.42em] text-violet-300 backdrop-blur-md sm:px-8">
+        Association culturelle <span class="mx-2 text-fuchsia-400">·</span> Musique électronique
+      </p>
+
+      <h1 class="hero-title bg-gradient-to-r from-fuchsia-400 via-violet-50 to-fuchsia-400 bg-clip-text text-[clamp(4.5rem,14vw,11rem)] font-black leading-[0.82] tracking-[-0.075em] text-transparent">
+        Le Coven
+      </h1>
+
+      <p class="mt-10 max-w-2xl text-base leading-8 text-violet-200/60 sm:text-lg">
+        Fédération de collectifs underground dédiée à la création, la diffusion et la promotion de la culture électronique et des arts alternatifs.
+      </p>
+
+      <div class="mt-10 flex w-full flex-col items-stretch justify-center gap-4 sm:w-auto sm:flex-row sm:items-center">
+        <a class="button-primary" href="/events">
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M7 3v3m10-3v3M4.5 9.5h15M6 5h12a2 2 0 0 1 2 2v12H4V7a2 2 0 0 1 2-2Z"></path>
+          </svg>
+          Événements
+        </a>
+
+        <a class="button-secondary" href="/blue-moon">
+          Blue Moon Festival
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="m9 18 6-6-6-6"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
