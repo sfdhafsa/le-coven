@@ -1,17 +1,16 @@
 import path from 'path';
 import type { Core } from '@strapi/strapi';
-import { isDatabaseClientKind } from '@strapi/database';
 
-const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+const config = ({ env }: Core.Config.Shared.ConfigParams) => {
+  const client = env('DATABASE_CLIENT', 'postgres');
 
-  if (!isDatabaseClientKind(client)) {
+  if (!['postgres', 'mysql', 'sqlite'].includes(client)) {
     throw new Error(
       `Unsupported DATABASE_CLIENT: ${client}. Use "postgres", "mysql", or "sqlite".`
     );
   }
 
-  const connections: Record<Core.Config.Database.ClientKind, Core.Config.Database['connection']> = {
+  const connections = {
     mysql: {
       client: 'mysql',
       connection: {
@@ -63,7 +62,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Database 
 
   return {
     connection: {
-      ...connections[client],
+      ...connections[client as keyof typeof connections],
       acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 60000),
     },
   };

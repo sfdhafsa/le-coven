@@ -1,4 +1,6 @@
 ---
+import Container from "../ui/Container.astro";
+
 const links = [
   { label: "Accueil", href: "/" },
   { label: "Le Coven", href: "/le-coven" },
@@ -8,76 +10,65 @@ const links = [
 ];
 
 const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) =>
+  href === "/" ? currentPath === href : currentPath.startsWith(href);
 ---
 
 <header class="site-header">
-  <nav class="mx-auto flex h-[4.5rem] max-w-[90rem] items-center justify-between gap-6 px-5 sm:px-8 lg:px-12" aria-label="Navigation principale">
-    <a class="group flex items-center gap-3" href="/" aria-label="Le Coven, accueil">
-      <img
-        class="size-11 rounded-full border border-violet-400/30 object-cover shadow-[0_0_20px_rgba(168,85,247,0.2)]"
-        src="/images/logo-le-coven.jpeg"
-        alt=""
-        width="88"
-        height="88"
-      />
-      <span class="text-sm font-extrabold tracking-[0.2em] text-white sm:text-base">LE COVEN</span>
-    </a>
+  <Container size="wide" class="site-header__container">
+    <nav class="site-nav" aria-label="Navigation principale">
+      <a class="site-brand" href="/" aria-label="Le Coven, accueil">
+        <img
+          src="/images/logo-le-coven.jpeg"
+          alt=""
+          width="88"
+          height="88"
+        />
+        <span>LE COVEN</span>
+      </a>
 
-    <ul class="hidden items-center rounded-full border border-violet-400/15 bg-violet-950/10 p-1.5 md:flex">
-      {links.map((link) => {
-        const isActive = currentPath === link.href;
-
-        return (
+      <ul class="desktop-navigation">
+        {links.map((link) => (
           <li>
             <a
               href={link.href}
-              aria-current={isActive ? "page" : undefined}
-              class:list={[
-                "block rounded-full px-5 py-2.5 text-sm font-medium transition duration-300",
-                isActive
-                  ? "bg-fuchsia-400 text-slate-950 shadow-[0_0_24px_rgba(217,70,239,0.45)]"
-                  : "text-violet-300/65 hover:bg-violet-400/10 hover:text-violet-100",
-              ]}
+              aria-current={isCurrent(link.href) ? "page" : undefined}
+              class:list={["nav-link", isCurrent(link.href) && "nav-link--active"]}
             >
               {link.label}
             </a>
           </li>
-        );
-      })}
-    </ul>
+        ))}
+      </ul>
 
-    <button
-      class="menu-toggle grid size-11 place-items-center rounded-full border border-violet-400/25 text-violet-100 md:hidden"
-      type="button"
-      aria-expanded="false"
-      aria-controls="mobile-navigation"
-      aria-label="Ouvrir le menu"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-  </nav>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-navigation"
+        aria-label="Ouvrir le menu"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </Container>
 
-  <div id="mobile-navigation" class="mobile-navigation md:hidden" hidden>
-    <ul class="mx-5 mb-4 grid gap-1 rounded-2xl border border-violet-400/20 bg-[#090313]/95 p-3 shadow-2xl backdrop-blur-xl">
-      {links.map((link) => (
-        <li>
-          <a
-            href={link.href}
-            aria-current={currentPath === link.href ? "page" : undefined}
-            class:list={[
-              "block rounded-xl px-4 py-3 text-sm font-medium",
-              currentPath === link.href
-                ? "bg-fuchsia-400 text-slate-950"
-                : "text-violet-100/75 hover:bg-violet-400/10 hover:text-white",
-            ]}
-          >
-            {link.label}
-          </a>
-        </li>
-      ))}
-    </ul>
+  <div id="mobile-navigation" class="mobile-navigation" hidden>
+    <Container size="wide">
+      <ul>
+        {links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              aria-current={isCurrent(link.href) ? "page" : undefined}
+              class:list={["mobile-nav-link", isCurrent(link.href) && "mobile-nav-link--active"]}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Container>
   </div>
 </header>
 
@@ -85,12 +76,32 @@ const currentPath = Astro.url.pathname;
   const menuButton = document.querySelector<HTMLButtonElement>(".menu-toggle");
   const mobileNavigation = document.querySelector<HTMLElement>("#mobile-navigation");
 
+  const closeMenu = () => {
+    if (!menuButton || !mobileNavigation) return;
+    mobileNavigation.hidden = true;
+    menuButton.setAttribute("aria-expanded", "false");
+    menuButton.setAttribute("aria-label", "Ouvrir le menu");
+    document.body.classList.remove("menu-open");
+  };
+
   menuButton?.addEventListener("click", () => {
     if (!mobileNavigation) return;
-
     const willOpen = mobileNavigation.hidden;
     mobileNavigation.hidden = !willOpen;
     menuButton.setAttribute("aria-expanded", String(willOpen));
     menuButton.setAttribute("aria-label", willOpen ? "Fermer le menu" : "Ouvrir le menu");
+    document.body.classList.toggle("menu-open", willOpen);
+  });
+
+  mobileNavigation?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu();
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 768) closeMenu();
   });
 </script>

@@ -1,0 +1,39 @@
+---
+import Container from "./Container.astro";
+
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  align?: "left" | "center";
+  surface?: "default" | "soft" | "transparent";
+  containerSize?: "narrow" | "content" | "wide";
+  class?: string;
+}
+
+const {
+  id,
+  eyebrow,
+  title,
+  description,
+  align = "left",
+  surface = "default",
+  containerSize = "wide",
+  class: className,
+} = Astro.props;
+---
+
+<section id={id} class:list={["c-section", `c-section--${surface}`, className]}>
+  <Container size={containerSize}>
+    {(eyebrow || title || description) && (
+      <header class:list={["c-section__header", align === "center" && "c-section__header--center"]}>
+        {eyebrow && <p class="c-eyebrow">{eyebrow}</p>}
+        {title && <h2 class="c-section__title">{title}</h2>}
+        {description && <p class="c-section__description">{description}</p>}
+      </header>
+    )}
+
+    <slot />
+  </Container>
+</section>

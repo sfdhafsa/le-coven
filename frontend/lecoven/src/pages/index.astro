@@ -1,4 +1,5 @@
 ---
+import Button from "../components/ui/Button.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
@@ -27,32 +28,32 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         fetchpriority="high"
       />
 
-      <p class="mb-7 rounded-full border border-violet-400/30 bg-violet-950/25 px-5 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.42em] text-violet-300 backdrop-blur-md sm:px-8">
-        Association culturelle <span class="mx-2 text-fuchsia-400">·</span> Musique électronique
+      <p class="c-eyebrow c-eyebrow--pill">
+        Association culturelle <span aria-hidden="true">·</span> Musique électronique
       </p>
 
       <h1 class="hero-title bg-gradient-to-r from-fuchsia-400 via-violet-50 to-fuchsia-400 bg-clip-text text-[clamp(4.5rem,14vw,11rem)] font-black leading-[0.82] tracking-[-0.075em] text-transparent">
         Le Coven
       </h1>
 
-      <p class="mt-10 max-w-2xl text-base leading-8 text-violet-200/60 sm:text-lg">
+      <p class="mt-10 max-w-2xl text-base leading-8 text-violet-100/65 sm:text-lg">
         Fédération de collectifs underground dédiée à la création, la diffusion et la promotion de la culture électronique et des arts alternatifs.
       </p>
 
       <div class="mt-10 flex w-full flex-col items-stretch justify-center gap-4 sm:w-auto sm:flex-row sm:items-center">
-        <a class="button-primary" href="/events">
+        <Button href="/events" size="lg">
           <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.8">
             <path d="M7 3v3m10-3v3M4.5 9.5h15M6 5h12a2 2 0 0 1 2 2v12H4V7a2 2 0 0 1 2-2Z"></path>
           </svg>
           Événements
-        </a>
+        </Button>
 
-        <a class="button-secondary" href="/blue-moon">
+        <Button href="/blue-moon" variant="secondary" size="lg">
           Blue Moon Festival
           <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.8">
             <path d="m9 18 6-6-6-6"></path>
           </svg>
-        </a>
+        </Button>
       </div>
     </div>
   </section>

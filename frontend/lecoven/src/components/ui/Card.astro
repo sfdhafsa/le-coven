@@ -1,0 +1,20 @@
+---
+interface Props {
+  variant?: "default" | "glow" | "outline";
+  interactive?: boolean;
+  class?: string;
+}
+
+const { variant = "default", interactive = false, class: className } = Astro.props;
+---
+
+<article
+  class:list={[
+    "c-card",
+    `c-card--${variant}`,
+    interactive && "c-card--interactive",
+    className,
+  ]}
+>
+  <slot />
+</article>

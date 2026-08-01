@@ -27,22 +27,21 @@
     },
     "photo": {
       "type": "media",
-      "multiple": true,
+      "multiple": false,
       "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
+        "images"
       ]
     },
     "biography": {
-      "type": "string"
+      "type": "text"
     },
     "displayOrder": {
-      "type": "integer"
+      "type": "integer",
+      "default": 0
     },
     "isActive": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     }
   }
 }
