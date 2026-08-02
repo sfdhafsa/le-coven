@@ -71,7 +71,8 @@
       "type": "boolean"
     },
     "onlineUrl": {
-      "type": "string"
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
     },
     "category": {
       "type": "enumeration",
@@ -87,16 +88,20 @@
       ]
     },
     "facebookUrl": {
-      "type": "string"
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
     },
     "shotgunUrl": {
-      "type": "string"
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
     },
     "ticketingUrl": {
-      "type": "string"
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
     },
     "helloAssoUrl": {
-      "type": "string"
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
     },
     "featured": {
       "type": "boolean",

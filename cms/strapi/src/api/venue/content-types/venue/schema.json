@@ -40,10 +40,12 @@
       "type": "richtext"
     },
     "mapUrl": {
-      "type": "string"
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
     },
     "websiteUrl": {
-      "type": "string"
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
     },
     "image": {
       "type": "media",
