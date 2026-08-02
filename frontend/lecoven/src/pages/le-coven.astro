@@ -1,0 +1,113 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/ui/Card.astro";
+import Container from "../components/ui/Container.astro";
+
+const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+
+interface TextChild { type: "text"; text: string; }
+interface ContentBlock {
+  type: "heading" | "paragraph";
+  level?: number;
+  children?: TextChild[];
+}
+interface MediaFormat { url: string; }
+interface StrapiImage {
+  url: string;
+  alternativeText?: string | null;
+  formats?: { large?: MediaFormat; medium?: MediaFormat } | null;
+}
+interface PageEntry {
+  title: string;
+  slug: string;
+  eyebrow?: string | null;
+  summary?: string | null;
+  content?: ContentBlock[] | null;
+  heroImage?: StrapiImage | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+}
+interface ContentSection {
+  eyebrow: string;
+  title: string;
+  paragraphs: string[];
+}
+
+const response = await fetch(
+  `${STRAPI_URL}/api/pages?filters[slug][$eq]=le-coven&populate=heroImage`,
+);
+if (!response.ok) {
+  throw new Error(`Impossible de charger la page Le Coven (${response.status}).`);
+}
+
+const payload: { data: PageEntry[] } = await response.json();
+const page = payload.data[0];
+if (!page) return Astro.redirect("/", 302);
+
+const blockText = (block: ContentBlock) =>
+  block.children?.map((child) => child.text).join("").trim() ?? "";
+const sections: ContentSection[] = [];
+let currentSection: ContentSection | undefined;
+
+for (const block of page.content ?? []) {
+  const text = blockText(block);
+  if (!text) continue;
+  if (block.type === "heading" && block.level === 3) {
+    currentSection = { eyebrow: text, title: "", paragraphs: [] };
+    sections.push(currentSection);
+    continue;
+  }
+  if (!currentSection) continue;
+  if (block.type === "heading" && block.level === 2 && !currentSection.title) {
+    currentSection.title = text;
+  } else if (block.type === "paragraph") {
+    currentSection.paragraphs.push(text);
+  }
+}
+
+const imagePath = page.heroImage?.formats?.large?.url
+  ?? page.heroImage?.formats?.medium?.url
+  ?? page.heroImage?.url;
+const heroUrl = imagePath
+  ? imagePath.startsWith("http") ? imagePath : `${STRAPI_URL}${imagePath}`
+  : undefined;
+---
+
+<BaseLayout
+  title={page.seoTitle || `${page.title} — Association`}
+  description={page.seoDescription || page.summary || undefined}
+>
+  <header
+    class="association-page-hero"
+    style={heroUrl ? `--association-hero-image: url('${heroUrl}')` : undefined}
+  >
+    <div class="association-page-hero__star" aria-hidden="true"></div>
+    <Container size="wide" class="association-page-hero__content">
+      {page.eyebrow && <p class="c-eyebrow">{page.eyebrow}</p>}
+      <h1>{page.title}</h1>
+      {page.summary && <p class="association-page-hero__summary">{page.summary}</p>}
+    </Container>
+  </header>
+
+  <section class="association-page-content" aria-label="Présentation de l’association">
+    <Container size="wide">
+      <div class="association-page-grid">
+        {sections.map((section, index) => (
+          <Card
+            variant={index === sections.length - 1 ? "glow" : "outline"}
+            class:list={[
+              "association-content-card",
+              index === sections.length - 1 && "association-content-card--featured",
+            ]}
+          >
+            <p class="association-content-card__eyebrow">{section.eyebrow}</p>
+            {section.title && <h2>{section.title}</h2>}
+            <div class="association-content-card__copy">
+              {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+            </div>
+          </Card>
+        ))}
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

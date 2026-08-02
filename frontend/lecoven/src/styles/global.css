@@ -429,6 +429,127 @@ button {
   }
 }
 
+/* Association page */
+
+.association-page-hero {
+  position: relative;
+  display: grid;
+  min-height: clamp(28rem, 63svh, 42rem);
+  place-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid rgb(168 85 247 / 0.14);
+  background:
+    linear-gradient(180deg, rgb(5 2 13 / 0.6), rgb(5 2 13 / 0.96)),
+    radial-gradient(circle at 50% 50%, rgb(126 34 206 / 0.2), transparent 42%),
+    var(--association-hero-image, none) center 45% / cover no-repeat,
+    #080311;
+}
+
+.association-page-hero::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(6 2 15 / 0.72), transparent 35%, transparent 65%, rgb(6 2 15 / 0.72));
+  content: "";
+}
+
+.association-page-hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.association-page-hero__content .c-eyebrow {
+  justify-content: center;
+}
+
+.association-page-hero h1 {
+  margin-top: 1.25rem;
+  color: #f3edff;
+  font-size: clamp(4.5rem, 13vw, 10rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.075em;
+  text-shadow: 0 1rem 4rem rgb(36 8 70 / 0.6);
+}
+
+.association-page-hero__summary {
+  max-width: 46rem;
+  margin: 2rem auto 0;
+  color: rgb(233 213 255 / 0.66);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  line-height: 1.8;
+}
+
+.association-page-hero__star {
+  position: absolute;
+  z-index: 1;
+  width: clamp(20rem, 42vw, 38rem);
+  aspect-ratio: 1;
+  background: rgb(168 85 247 / 0.065);
+  clip-path: polygon(50% 0, 61% 36%, 100% 38%, 69% 60%, 79% 100%, 50% 75%, 21% 100%, 31% 60%, 0 38%, 39% 36%);
+  transform: rotate(-9deg);
+}
+
+.association-page-content {
+  padding-block: clamp(4rem, 9vw, 8rem);
+  background:
+    radial-gradient(circle at 80% 18%, rgb(88 28 135 / 0.17), transparent 34rem),
+    linear-gradient(180deg, #10031c, #06020d);
+}
+
+.association-page-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.association-content-card {
+  padding: clamp(1.75rem, 4vw, 3rem);
+}
+
+.association-content-card__eyebrow {
+  color: #d946ef;
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.association-content-card h2 {
+  margin-top: 1.35rem;
+  color: #f4efff;
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.association-content-card__copy {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.association-content-card__copy p {
+  color: rgb(221 214 254 / 0.54);
+  line-height: 1.85;
+}
+
+.association-content-card--featured {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.association-content-card--featured .association-content-card__copy {
+  max-width: 52rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .association-page-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .site-footer {
   position: relative;
   overflow: hidden;
