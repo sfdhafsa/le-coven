@@ -480,6 +480,56 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiArtistArtist extends Struct.CollectionTypeSchema {
+  collectionName: 'artists';
+  info: {
+    displayName: 'Artist';
+    pluralName: 'artists';
+    singularName: 'artist';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    biography: Schema.Attribute.Blocks;
+    city: Schema.Attribute.String;
+    country: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    facebookUrl: Schema.Attribute.String;
+    featured: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    gallery: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    genres: Schema.Attribute.String;
+    instagramUrl: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::artist.artist'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    profileImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    > &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    shortBiography: Schema.Attribute.Text;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    soundcloudUrl: Schema.Attribute.String;
+    spotifyUrl: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    websiteUrl: Schema.Attribute.String;
+  };
+}
+
 export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   collectionName: 'events';
   info: {
@@ -542,6 +592,63 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     venue: Schema.Attribute.Relation<'manyToOne', 'api::venue.venue'>;
+  };
+}
+
+export interface ApiNewsArticleNewsArticle extends Struct.CollectionTypeSchema {
+  collectionName: 'news_articles';
+  info: {
+    displayName: 'NewsArticle';
+    pluralName: 'news-articles';
+    singularName: 'news-article';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    authorName: Schema.Attribute.String;
+    category: Schema.Attribute.Enumeration<
+      [
+        'association',
+        'event',
+        'festival',
+        'collective',
+        'announcement',
+        'partnership',
+        'other',
+      ]
+    >;
+    content: Schema.Attribute.Blocks & Schema.Attribute.Required;
+    coverImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    > &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    excerpt: Schema.Attribute.Text & Schema.Attribute.Required;
+    externalUrl: Schema.Attribute.String;
+    featured: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    gallery: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::news-article.news-article'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    seoDescription: Schema.Attribute.Text;
+    seoTitle: Schema.Attribute.String;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -1161,7 +1268,9 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::artist.artist': ApiArtistArtist;
       'api::event.event': ApiEventEvent;
+      'api::news-article.news-article': ApiNewsArticleNewsArticle;
       'api::partner.partner': ApiPartnerPartner;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
       'api::venue.venue': ApiVenueVenue;
