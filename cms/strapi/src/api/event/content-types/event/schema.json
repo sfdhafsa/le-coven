@@ -4,7 +4,7 @@
   "info": {
     "singularName": "event",
     "pluralName": "events",
-    "displayName": "Evénement",
+    "displayName": "Événement",
     "description": "Un événement est une activité organisée par l'association ou un partenaire, qui peut être un concert, un festival, une conférence, un atelier, etc."
   },
   "options": {
@@ -63,7 +63,7 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::venue.venue",
-      "inversedBy": "events"
+      "inversedBy": "evenements"
     },
     "lieuPersonnalise": {
       "type": "string"
@@ -71,7 +71,7 @@
     "evenementEnLigne": {
       "type": "boolean"
     },
-    "urlEnLigne": {
+    "lienEnLigne": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
@@ -88,23 +88,23 @@
         "other"
       ]
     },
-    "urlFacebook": {
+    "lienFacebook": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "urlShotgun": {
+    "lienShotgun": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "urlBilletterie": {
+    "lienBilletterie": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "urlHelloAsso": {
+    "lienHelloAsso": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "enVedette": {
+    "misEnAvant": {
       "type": "boolean",
       "default": false
     },

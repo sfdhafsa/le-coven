@@ -4,29 +4,29 @@
   "info": {
     "singularName": "artist",
     "pluralName": "artists",
-    "displayName": "Artist"
+    "displayName": "Artiste"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "nom": {
       "type": "string",
       "required": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "name",
+      "targetField": "nom",
       "required": true
     },
-    "biography": {
+    "biographie": {
       "type": "blocks"
     },
-    "shortBiography": {
+    "biographieCourte": {
       "type": "text"
     },
-    "profileImage": {
+    "imageProfil": {
       "type": "media",
       "multiple": false,
       "required": true,
@@ -37,7 +37,7 @@
         "audios"
       ]
     },
-    "gallery": {
+    "galerie": {
       "type": "media",
       "multiple": true,
       "allowedTypes": [
@@ -50,36 +50,42 @@
     "genres": {
       "type": "string"
     },
-    "country": {
+    "pays": {
       "type": "string"
     },
-    "city": {
+    "ville": {
       "type": "string"
     },
-    "instagramUrl": {
+    "lienInstagram": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "facebookUrl": {
+    "lienFacebook": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "soundcloudUrl": {
+    "lienSoundcloud": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "spotifyUrl": {
+    "lienSpotify": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "websiteUrl": {
+    "lienSiteWeb": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "featured": {
+    "misEnAvant": {
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "performances": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::performance.performance",
+      "mappedBy": "artiste"
     }
   }
 }

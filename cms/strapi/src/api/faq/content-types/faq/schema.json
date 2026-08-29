@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "faqs",
+  "info": {
+    "singularName": "faq",
+    "pluralName": "faqs",
+    "displayName": "FAQ"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "question": {
+      "type": "string",
+      "required": true
+    },
+    "reponse": {
+      "type": "blocks",
+      "required": true
+    },
+    "categorie": {
+      "type": "string"
+    },
+    "ordreAffichage": {
+      "type": "integer",
+      "default": 0
+    },
+    "misEnAvant": {
+      "type": "boolean",
+      "default": false
+    },
+    "editionFestival": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::festival-edition.festival-edition",
+      "inversedBy": "faqs"
+    }
+  }
+}

@@ -4,22 +4,22 @@
   "info": {
     "singularName": "partner",
     "pluralName": "partners",
-    "displayName": "Partner"
+    "displayName": "Partenaire"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "nom": {
       "type": "string",
       "required": true
     },
-    "displayOrder": {
+    "ordreAffichage": {
       "type": "integer",
       "default": 0
     },
-    "isActive": {
+    "actif": {
       "type": "boolean",
       "default": true
     },
@@ -33,8 +33,9 @@
         "images"
       ]
     },
-    "websiteUrl": {
-      "type": "string"
+    "lienSiteWeb": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
     }
   }
 }

@@ -1,0 +1,115 @@
+{
+  "kind": "collectionType",
+  "collectionName": "festival_editions",
+  "info": {
+    "singularName": "festival-edition",
+    "pluralName": "festival-editions",
+    "displayName": "Édition du festival"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nom": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "nom",
+      "required": true
+    },
+    "annee": {
+      "type": "integer",
+      "required": true
+    },
+    "numeroEdition": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "descriptionCourte": {
+      "type": "text",
+      "required": true
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "dateDebut": {
+      "type": "date",
+      "required": true
+    },
+    "dateFin": {
+      "type": "date",
+      "required": true
+    },
+    "imageCouverture": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "affiche": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "galerie": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "theme": {
+      "type": "string"
+    },
+    "lienBilletterie": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "lienBenevolat": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "lienBoutique": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "lienEvenementFacebook": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "misEnAvant": {
+      "type": "boolean",
+      "default": false
+    },
+    "editionActuelle": {
+      "type": "boolean",
+      "default": false
+    },
+    "performances": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::performance.performance",
+      "mappedBy": "editionFestival"
+    },
+    "lieux": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::venue.venue",
+      "inversedBy": "editionsFestival"
+    },
+    "informationsPratiques": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::practical-information.practical-information",
+      "mappedBy": "editionFestival"
+    },
+    "faqs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::faq.faq",
+      "mappedBy": "editionFestival"
+    }
+  }
+}

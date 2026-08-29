@@ -11,42 +11,42 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
+    "titre": {
       "type": "string",
       "required": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "title"
+      "targetField": "titre"
     },
-    "summary": {
+    "resume": {
       "type": "text"
     },
-    "heroImage": {
+    "imageBanniere": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
         "images"
       ]
     },
-    "seoTitle": {
+    "titreSeo": {
       "type": "string"
     },
-    "seoDescription": {
+    "descriptionSeo": {
       "type": "text"
     },
-    "isVisibleInNavigation": {
+    "visibleDansNavigation": {
       "type": "boolean",
       "default": false
     },
-    "navigationOrder": {
+    "ordreNavigation": {
       "type": "integer",
       "default": 0
     },
-    "eyebrow": {
+    "surtitre": {
       "type": "string"
     },
-    "content": {
+    "contenu": {
       "type": "blocks"
     }
   }

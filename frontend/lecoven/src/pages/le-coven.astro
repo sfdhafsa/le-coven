@@ -18,14 +18,14 @@ interface StrapiImage {
   formats?: { large?: MediaFormat; medium?: MediaFormat } | null;
 }
 interface PageEntry {
-  title: string;
+  titre: string;
   slug: string;
-  eyebrow?: string | null;
-  summary?: string | null;
-  content?: ContentBlock[] | null;
-  heroImage?: StrapiImage | null;
-  seoTitle?: string | null;
-  seoDescription?: string | null;
+  surtitre?: string | null;
+  resume?: string | null;
+  contenu?: ContentBlock[] | null;
+  imageBanniere?: StrapiImage | null;
+  titreSeo?: string | null;
+  descriptionSeo?: string | null;
 }
 interface ContentSection {
   eyebrow: string;
@@ -34,7 +34,7 @@ interface ContentSection {
 }
 
 const response = await fetch(
-  `${STRAPI_URL}/api/pages?filters[slug][$eq]=le-coven&populate=heroImage`,
+  `${STRAPI_URL}/api/pages?filters[slug][$eq]=le-coven&populate=imageBanniere`,
 );
 if (!response.ok) {
   throw new Error(`Impossible de charger la page Le Coven (${response.status}).`);
@@ -49,7 +49,7 @@ const blockText = (block: ContentBlock) =>
 const sections: ContentSection[] = [];
 let currentSection: ContentSection | undefined;
 
-for (const block of page.content ?? []) {
+for (const block of page.contenu ?? []) {
   const text = blockText(block);
   if (!text) continue;
   if (block.type === "heading" && block.level === 3) {
@@ -65,17 +65,17 @@ for (const block of page.content ?? []) {
   }
 }
 
-const imagePath = page.heroImage?.formats?.large?.url
-  ?? page.heroImage?.formats?.medium?.url
-  ?? page.heroImage?.url;
+const imagePath = page.imageBanniere?.formats?.large?.url
+  ?? page.imageBanniere?.formats?.medium?.url
+  ?? page.imageBanniere?.url;
 const heroUrl = imagePath
   ? imagePath.startsWith("http") ? imagePath : `${STRAPI_URL}${imagePath}`
   : undefined;
 ---
 
 <BaseLayout
-  title={page.seoTitle || `${page.title} — Association`}
-  description={page.seoDescription || page.summary || undefined}
+  title={page.titreSeo || `${page.titre} — Association`}
+  description={page.descriptionSeo || page.resume || undefined}
 >
   <header
     class="association-page-hero"
@@ -83,9 +83,9 @@ const heroUrl = imagePath
   >
     <div class="association-page-hero__star" aria-hidden="true"></div>
     <Container size="wide" class="association-page-hero__content">
-      {page.eyebrow && <p class="c-eyebrow">{page.eyebrow}</p>}
-      <h1>{page.title}</h1>
-      {page.summary && <p class="association-page-hero__summary">{page.summary}</p>}
+      {page.surtitre && <p class="c-eyebrow">{page.surtitre}</p>}
+      <h1>{page.titre}</h1>
+      {page.resume && <p class="association-page-hero__summary">{page.resume}</p>}
     </Container>
   </header>
 

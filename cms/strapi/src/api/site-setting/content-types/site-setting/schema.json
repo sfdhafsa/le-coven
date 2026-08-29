@@ -1,0 +1,101 @@
+{
+  "kind": "collectionType",
+  "collectionName": "site_settings",
+  "info": {
+    "singularName": "site-setting",
+    "pluralName": "site-settings",
+    "displayName": "Paramètres du site"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nomSite": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "descriptionSite": {
+      "type": "text"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "favicon": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "textePiedDePage": {
+      "type": "text"
+    },
+    "emailGeneral": {
+      "type": "email"
+    },
+    "emailAdministration": {
+      "type": "email"
+    },
+    "adresse": {
+      "type": "text"
+    },
+    "lienInstagram": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "lienFacebook": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "lienLinktree": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "lienHelloAsso": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "newsletterActive": {
+      "type": "boolean",
+      "default": false
+    },
+    "titreNewsletter": {
+      "type": "string"
+    },
+    "descriptionNewsletter": {
+      "type": "text"
+    },
+    "lienFormulaireNewsletter": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
+    },
+    "titreSeoParDefaut": {
+      "type": "string"
+    },
+    "descriptionSeoParDefaut": {
+      "type": "text"
+    },
+    "imagePartageParDefaut": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "nomLegal": {
+      "type": "string"
+    },
+    "numeroRNA": {
+      "type": "string"
+    },
+    "numeroSIRET": {
+      "type": "string"
+    },
+    "codeAPE": {
+      "type": "string"
+    },
+    "representantLegal": {
+      "type": "string"
+    }
+  }
+}

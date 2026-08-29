@@ -4,46 +4,46 @@
   "info": {
     "singularName": "venue",
     "pluralName": "venues",
-    "displayName": "Venue"
+    "displayName": "Lieu"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "nom": {
       "type": "string",
       "required": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "name",
+      "targetField": "nom",
       "required": true
     },
-    "address": {
+    "adresse": {
       "type": "string"
     },
-    "city": {
+    "ville": {
       "type": "string",
       "required": true
     },
-    "postalCode": {
+    "codePostal": {
       "type": "string"
     },
-    "country": {
+    "pays": {
       "type": "string"
     },
     "description": {
       "type": "richtext"
     },
-    "accessInformation": {
+    "informationsAcces": {
       "type": "richtext"
     },
-    "mapUrl": {
+    "lienCarte": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "websiteUrl": {
+    "lienSiteWeb": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
@@ -57,10 +57,22 @@
         "audios"
       ]
     },
-    "events": {
+    "evenements": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::event.event",
+      "mappedBy": "lieu"
+    },
+    "editionsFestival": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::festival-edition.festival-edition",
+      "mappedBy": "lieux"
+    },
+    "performances": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::performance.performance",
       "mappedBy": "lieu"
     }
   }
