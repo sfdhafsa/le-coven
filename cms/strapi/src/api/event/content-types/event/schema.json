@@ -4,30 +4,31 @@
   "info": {
     "singularName": "event",
     "pluralName": "events",
-    "displayName": "Event"
+    "displayName": "Evénement",
+    "description": "Un événement est une activité organisée par l'association ou un partenaire, qui peut être un concert, un festival, une conférence, un atelier, etc."
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
+    "titre": {
       "type": "string",
       "required": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "title",
+      "targetField": "titre",
       "required": true
     },
-    "shortDescription": {
+    "descriptionCourte": {
       "type": "text",
       "required": true
     },
     "description": {
       "type": "richtext"
     },
-    "coverImage": {
+    "imageCouverture": {
       "type": "media",
       "multiple": false,
       "required": true,
@@ -38,7 +39,7 @@
         "audios"
       ]
     },
-    "gallery": {
+    "galerie": {
       "type": "media",
       "multiple": true,
       "allowedTypes": [
@@ -48,33 +49,33 @@
         "audios"
       ]
     },
-    "startDate": {
+    "dateDebut": {
       "type": "datetime",
       "required": true
     },
-    "endDate": {
+    "dateFin": {
       "type": "datetime"
     },
-    "doorsOpenAt": {
+    "ouvertureDesPortes": {
       "type": "datetime"
     },
-    "venue": {
+    "lieu": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::venue.venue",
       "inversedBy": "events"
     },
-    "customLocation": {
+    "lieuPersonnalise": {
       "type": "string"
     },
-    "onlineEvent": {
+    "evenementEnLigne": {
       "type": "boolean"
     },
-    "onlineUrl": {
+    "urlEnLigne": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "category": {
+    "categorie": {
       "type": "enumeration",
       "required": true,
       "enum": [
@@ -87,42 +88,42 @@
         "other"
       ]
     },
-    "facebookUrl": {
+    "urlFacebook": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "shotgunUrl": {
+    "urlShotgun": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "ticketingUrl": {
+    "urlBilletterie": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "helloAssoUrl": {
+    "urlHelloAsso": {
       "type": "string",
       "regex": "^https?:\\/\\/.+"
     },
-    "featured": {
+    "enVedette": {
       "type": "boolean",
       "default": false
     },
-    "soldOut": {
+    "complet": {
       "type": "boolean",
       "default": false
     },
-    "cancelled": {
+    "annule": {
       "type": "boolean",
       "default": false
     },
-    "freeEntry": {
+    "entreeGratuite": {
       "type": "boolean",
       "default": false
     },
-    "priceInformation": {
+    "informationsTarifaires": {
       "type": "string"
     },
-    "minimumAge": {
+    "ageMinimum": {
       "type": "integer"
     }
   }

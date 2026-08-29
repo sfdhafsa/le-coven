@@ -480,41 +480,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiPagePage extends Struct.CollectionTypeSchema {
-  collectionName: 'pages';
-  info: {
-    displayName: 'Page';
-    pluralName: 'pages';
-    singularName: 'page';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    content: Schema.Attribute.Blocks;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    eyebrow: Schema.Attribute.String;
-    heroImage: Schema.Attribute.Media<'images'>;
-    isVisibleInNavigation: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::page.page'> &
-      Schema.Attribute.Private;
-    navigationOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    publishedAt: Schema.Attribute.DateTime;
-    seoDescription: Schema.Attribute.Text;
-    seoTitle: Schema.Attribute.String;
-    slug: Schema.Attribute.UID<'title'>;
-    summary: Schema.Attribute.Text;
-    title: Schema.Attribute.String & Schema.Attribute.Required;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiArtistArtist extends Struct.CollectionTypeSchema {
   collectionName: 'artists';
   info: {
@@ -568,7 +533,8 @@ export interface ApiArtistArtist extends Struct.CollectionTypeSchema {
 export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   collectionName: 'events';
   info: {
-    displayName: 'Event';
+    description: "Un \u00E9v\u00E9nement est une activit\u00E9 organis\u00E9e par l'association ou un partenaire, qui peut \u00EAtre un concert, un festival, une conf\u00E9rence, un atelier, etc.";
+    displayName: 'Ev\u00E9nement';
     pluralName: 'events';
     singularName: 'event';
   };
@@ -576,8 +542,9 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    cancelled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    category: Schema.Attribute.Enumeration<
+    ageMinimum: Schema.Attribute.Integer;
+    annule: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    categorie: Schema.Attribute.Enumeration<
       [
         'concert',
         'festival',
@@ -589,44 +556,44 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
       ]
     > &
       Schema.Attribute.Required;
-    coverImage: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    > &
-      Schema.Attribute.Required;
+    complet: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    customLocation: Schema.Attribute.String;
+    dateDebut: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    dateFin: Schema.Attribute.DateTime;
     description: Schema.Attribute.RichText;
-    doorsOpenAt: Schema.Attribute.DateTime;
-    endDate: Schema.Attribute.DateTime;
-    facebookUrl: Schema.Attribute.String;
-    featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    freeEntry: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    gallery: Schema.Attribute.Media<
+    descriptionCourte: Schema.Attribute.Text & Schema.Attribute.Required;
+    entreeGratuite: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    enVedette: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    evenementEnLigne: Schema.Attribute.Boolean;
+    galerie: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    helloAssoUrl: Schema.Attribute.String;
+    imageCouverture: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    > &
+      Schema.Attribute.Required;
+    informationsTarifaires: Schema.Attribute.String;
+    lieu: Schema.Attribute.Relation<'manyToOne', 'api::venue.venue'>;
+    lieuPersonnalise: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::event.event'> &
       Schema.Attribute.Private;
-    minimumAge: Schema.Attribute.Integer;
-    onlineEvent: Schema.Attribute.Boolean;
-    onlineUrl: Schema.Attribute.String;
-    priceInformation: Schema.Attribute.String;
+    ouvertureDesPortes: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
-    shortDescription: Schema.Attribute.Text & Schema.Attribute.Required;
-    shotgunUrl: Schema.Attribute.String;
-    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    soldOut: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    startDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    ticketingUrl: Schema.Attribute.String;
-    title: Schema.Attribute.String & Schema.Attribute.Required;
+    slug: Schema.Attribute.UID<'titre'> & Schema.Attribute.Required;
+    titre: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    venue: Schema.Attribute.Relation<'manyToOne', 'api::venue.venue'>;
+    urlBilletterie: Schema.Attribute.String;
+    urlEnLigne: Schema.Attribute.String;
+    urlFacebook: Schema.Attribute.String;
+    urlHelloAsso: Schema.Attribute.String;
+    urlShotgun: Schema.Attribute.String;
   };
 }
 
@@ -680,6 +647,41 @@ export interface ApiNewsArticleNewsArticle extends Struct.CollectionTypeSchema {
     seoDescription: Schema.Attribute.Text;
     seoTitle: Schema.Attribute.String;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPagePage extends Struct.CollectionTypeSchema {
+  collectionName: 'pages';
+  info: {
+    displayName: 'Page';
+    pluralName: 'pages';
+    singularName: 'page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    content: Schema.Attribute.Blocks;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    eyebrow: Schema.Attribute.String;
+    heroImage: Schema.Attribute.Media<'images'>;
+    isVisibleInNavigation: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::page.page'> &
+      Schema.Attribute.Private;
+    navigationOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    publishedAt: Schema.Attribute.DateTime;
+    seoDescription: Schema.Attribute.Text;
+    seoTitle: Schema.Attribute.String;
+    slug: Schema.Attribute.UID<'title'>;
+    summary: Schema.Attribute.Text;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1303,10 +1305,10 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
-      'api::page.page': ApiPagePage;
       'api::artist.artist': ApiArtistArtist;
       'api::event.event': ApiEventEvent;
       'api::news-article.news-article': ApiNewsArticleNewsArticle;
+      'api::page.page': ApiPagePage;
       'api::partner.partner': ApiPartnerPartner;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
       'api::venue.venue': ApiVenueVenue;
