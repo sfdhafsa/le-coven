@@ -4,18 +4,19 @@
   "info": {
     "singularName": "team-member",
     "pluralName": "team-members",
-    "displayName": "Team member"
+    "displayName": "Membre d'équipe",
+    "description": "Membres de la Cour Centrale du Coven"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "firstName": {
+    "prenom": {
       "type": "string",
       "required": true
     },
-    "lastName": {
+    "nom": {
       "type": "string",
       "required": true
     },
@@ -32,14 +33,14 @@
         "images"
       ]
     },
-    "biography": {
+    "biographie": {
       "type": "text"
     },
-    "displayOrder": {
+    "ordreAffichage": {
       "type": "integer",
       "default": 0
     },
-    "isActive": {
+    "actif": {
       "type": "boolean",
       "default": true
     }

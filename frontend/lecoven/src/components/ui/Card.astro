@@ -3,12 +3,14 @@ interface Props {
   variant?: "default" | "glow" | "outline";
   interactive?: boolean;
   class?: string;
+  id?: string;
 }
 
-const { variant = "default", interactive = false, class: className } = Astro.props;
+const { variant = "default", interactive = false, class: className, id } = Astro.props;
 ---
 
 <article
+  id={id}
   class:list={[
     "c-card",
     `c-card--${variant}`,

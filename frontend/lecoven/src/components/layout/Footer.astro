@@ -1,67 +1,29 @@
 ---
 import Container from "../ui/Container.astro";
 
-const navigationLinks = [
-  { label: "Accueil", href: "/" },
-  { label: "Le Coven", href: "/le-coven" },
-  { label: "Événements", href: "/events" },
-  { label: "Blue Moon Festival", href: "/blue-moon" },
-  { label: "Contact", href: "/contact" },
-];
-
-const associationLinks = [
-  { label: "Mission", href: "/le-coven#mission" },
-  { label: "Cour Centrale", href: "/le-coven#cour-centrale" },
-  { label: "Les collectifs", href: "/collectifs" },
-  { label: "Adhésion", href: "/adhesion" },
-];
-
 const currentYear = new Date().getFullYear();
+const licenceNumbers = (import.meta.env.PUBLIC_LICENCE_NUMBERS ?? "PLATESV-D-2024-006881,3-011359")
+  .split(",")
+  .map((licence: string) => licence.trim())
+  .filter(Boolean);
 ---
 
 <footer class="site-footer">
   <Container size="wide">
-    <div class="footer-grid">
-      <div>
-        <a class="footer-brand" href="/" aria-label="Le Coven, accueil">
-          <img src="/images/logo-le-coven.jpeg" alt="" width="80" height="80" loading="lazy" />
-          <span>LE COVEN</span>
-        </a>
-        <p class="footer-summary">
-          Fédération de collectifs underground pour la culture électronique et les arts alternatifs.
-        </p>
-      </div>
-
-      <div>
-        <h2 class="footer-heading">Navigation</h2>
-        <ul class="footer-list">
-          {navigationLinks.map((link) => <li><a class="footer-link" href={link.href}>{link.label}</a></li>)}
-        </ul>
-      </div>
-
-      <div>
-        <h2 class="footer-heading">L’asso</h2>
-        <ul class="footer-list">
-          {associationLinks.map((link) => <li><a class="footer-link" href={link.href}>{link.label}</a></li>)}
-        </ul>
-      </div>
-
-      <div>
-        <h2 class="footer-heading">Contact</h2>
-        <address class="footer-list not-italic">
-          <a class="footer-link block break-all" href="mailto:lecoven@etik.com">lecoven@etik.com</a>
-          <a class="footer-link block break-all" href="mailto:administration@lecoven.fr">administration@lecoven.fr</a>
-        </address>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <p>© {currentYear} Le Coven — Association loi 1901</p>
+    <div class="footer-minimal">
+      <a class="footer-email" href="mailto:lecoven@etik.com">lecoven@etik.com</a>
+      <nav class="footer-social" aria-label="Réseaux sociaux">
+        <a href={import.meta.env.PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/lecoven.asso/"} rel="noreferrer" target="_blank">Instagram</a>
+        <a href={import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook.com/LeCoven.asso"} rel="noreferrer" target="_blank">Facebook</a>
+        <a href="https://linktr.ee/LeCoven.asso" rel="noreferrer" target="_blank">Tous les liens</a>
+      </nav>
+      {licenceNumbers.length > 0 && (
+        <p class="footer-licences">Licences : {licenceNumbers.join(" · ")}</p>
+      )}
       <nav class="footer-legal" aria-label="Liens légaux">
         <a href="/mentions-legales">Mentions légales</a>
-        <span aria-hidden="true">·</span>
-        <a href="/confidentialite">Confidentialité</a>
       </nav>
+      <p class="footer-copyright">© {currentYear} Le Coven — RNA W595043038</p>
     </div>
   </Container>
 </footer>

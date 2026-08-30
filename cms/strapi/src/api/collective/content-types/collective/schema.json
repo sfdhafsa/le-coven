@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "collectives",
+  "info": {
+    "singularName": "collective",
+    "pluralName": "collectives",
+    "displayName": "Collectif",
+    "description": "Collectifs artistiques liés au Coven"
+  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": {},
+  "attributes": {
+    "nom": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "nom", "required": true },
+    "descriptionCourte": { "type": "text" },
+    "description": { "type": "blocks" },
+    "logo": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "imageCouverture": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "siteWeb": { "type": "string" },
+    "instagram": { "type": "string" },
+    "facebook": { "type": "string" },
+    "styleMusical": { "type": "string" },
+    "ordreAffichage": { "type": "integer", "default": 0 },
+    "actif": { "type": "boolean", "default": true }
+  }
+}

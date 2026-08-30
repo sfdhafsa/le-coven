@@ -1,0 +1,77 @@
+---
+const STRAPI_URL = (import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337").replace(/\/$/, "");
+
+interface Media {
+  url?: string;
+  alternativeText?: string | null;
+}
+
+interface CollectiveEntry {
+  name?: string;
+  nom?: string;
+  slug?: string;
+  logo?: Media | null;
+  isActive?: boolean | null;
+  actif?: boolean | null;
+  displayOrder?: number | null;
+  ordreAffichage?: number | null;
+}
+
+let collectives: Array<{ name: string; slug: string; logo: Media | null }> = [];
+
+try {
+  const response = await fetch(`${STRAPI_URL}/api/collectives?populate=logo`);
+  if (response.ok) {
+    const payload: { data?: CollectiveEntry[] } = await response.json();
+    const remoteCollectives = (payload.data ?? [])
+      .filter((item) => item.isActive !== false && item.actif !== false)
+      .sort((a, b) => (a.displayOrder ?? a.ordreAffichage ?? 0) - (b.displayOrder ?? b.ordreAffichage ?? 0))
+      .map((item) => ({
+        name: item.name ?? item.nom ?? "Collectif",
+        slug: item.slug ?? "",
+        logo: item.logo ?? null,
+      }))
+      .filter((item) => item.slug);
+
+    collectives = remoteCollectives;
+  }
+} catch {
+  collectives = [];
+}
+
+const logoUrl = (logo: Media | null) => {
+  if (!logo?.url) return undefined;
+  return logo.url.startsWith("http") ? logo.url : `${STRAPI_URL}${logo.url}`;
+};
+
+const repeatedCollectives = [...collectives, ...collectives];
+---
+
+{collectives.length > 0 && <aside class="collective-strip" aria-label="Les collectifs du Coven">
+  <p class="collective-strip__label">Les collectifs</p>
+  <div class="collective-strip__viewport">
+    <div class="collective-strip__track">
+      {repeatedCollectives.map((collective, index) => (
+        <a
+          class="collective-strip__item"
+          href={`/collectifs/${collective.slug}`}
+          aria-hidden={index >= collectives.length ? "true" : undefined}
+          tabindex={index >= collectives.length ? -1 : undefined}
+        >
+          {logoUrl(collective.logo) ? (
+            <img
+              src={logoUrl(collective.logo)}
+              alt=""
+              width="36"
+              height="36"
+              loading="lazy"
+            />
+          ) : (
+            <span class="collective-strip__mark" aria-hidden="true">✦</span>
+          )}
+          <span>{collective.name}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</aside>}

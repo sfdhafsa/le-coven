@@ -1,6 +1,78 @@
 ---
 import Button from "../components/ui/Button.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/ui/Container.astro";
+
+const STRAPI_URL = (import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337").replace(/\/$/, "");
+
+interface Media {
+  url?: string;
+  formats?: { medium?: { url: string }; large?: { url: string } } | null;
+}
+
+interface EventEntry {
+  title?: string;
+  titre?: string;
+  slug?: string;
+  shortDescription?: string;
+  descriptionCourte?: string;
+  startDate?: string;
+  dateDebut?: string;
+  customLocation?: string;
+  lieuLibre?: string;
+  coverImage?: Media | null;
+  imageCouverture?: Media | null;
+}
+
+const fallbackEvents = [
+  {
+    title: "La prochaine rencontre du Coven",
+    slug: "",
+    description: "La programmation complète sera annoncée prochainement.",
+    date: null,
+    location: "Hauts-de-France",
+    image: "/images/hero-concert.jfif",
+  },
+  {
+    title: "Blue Moon Festival",
+    slug: "",
+    description: "Artistes, collectifs et cultures électroniques réunis sous une même lune.",
+    date: null,
+    location: "Lieu à découvrir",
+    image: "/images/hero-performer.png",
+  },
+];
+
+let events = fallbackEvents;
+
+try {
+  const now = new Date().toISOString();
+  const response = await fetch(
+    `${STRAPI_URL}/api/events?filters[startDate][$gte]=${encodeURIComponent(now)}&populate=coverImage&sort=startDate:asc&pagination[pageSize]=6`,
+  );
+  if (response.ok) {
+    const payload: { data?: EventEntry[] } = await response.json();
+    const entries = (payload.data ?? []).map((event) => {
+      const image = event.coverImage ?? event.imageCouverture;
+      const imagePath = image?.formats?.large?.url ?? image?.formats?.medium?.url ?? image?.url;
+      return {
+        title: event.title ?? event.titre ?? "Événement Le Coven",
+        slug: event.slug ?? "",
+        description: event.shortDescription ?? event.descriptionCourte ?? "",
+        date: event.startDate ?? event.dateDebut ?? null,
+        location: event.customLocation ?? event.lieuLibre ?? "Le Coven",
+        image: imagePath ? (imagePath.startsWith("http") ? imagePath : `${STRAPI_URL}${imagePath}`) : "/images/hero-concert.jfif",
+      };
+    });
+    if (entries.length > 0) events = entries;
+  }
+} catch {
+  // L’accueil reste disponible lorsque Strapi est en veille.
+}
+
+const formatDate = (date: string | null) => date
+  ? new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(date))
+  : "Bientôt annoncé";
 ---
 
 <BaseLayout
@@ -19,14 +91,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <span class="cosmic-star bottom-[13%] right-[7%]" aria-hidden="true">✦</span>
 
     <div class="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
-      <img
-        class="mb-8 size-28 rounded-full border-2 border-violet-400/35 object-cover shadow-[0_0_45px_rgba(168,85,247,0.3)] sm:size-36"
-        src="/images/logo-le-coven.jpeg"
-        alt="Logo Le Coven"
-        width="288"
-        height="288"
-        fetchpriority="high"
-      />
+      <div class="home-logo-lockup" aria-label="Logo Le Coven">
+        <span class="home-logo-lockup__orbit" aria-hidden="true"></span>
+        <img
+          src="/images/logo-le-coven.jpeg"
+          alt="Le Coven, croissants de lune entourant la lettre V"
+          width="288"
+          height="288"
+          fetchpriority="high"
+        />
+      </div>
 
       <p class="c-eyebrow c-eyebrow--pill">
         Association culturelle <span aria-hidden="true">·</span> Musique électronique
@@ -57,4 +131,77 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
     </div>
   </section>
+
+  <section class="home-events" aria-labelledby="home-events-title">
+    <Container size="wide">
+      <div class="home-section-heading home-section-heading--row">
+        <div>
+          <p class="c-eyebrow">À l’agenda</p>
+          <h2 id="home-events-title">Prochains événements</h2>
+        </div>
+        <div class="home-carousel-controls" aria-label="Contrôles du carrousel">
+          <button type="button" data-event-previous aria-label="Événement précédent">←</button>
+          <button type="button" data-event-next aria-label="Événement suivant">→</button>
+        </div>
+      </div>
+
+      <div class="home-event-carousel" data-event-carousel tabindex="0">
+        {events.map((event) => (
+          <article class="home-event-card">
+            <img src={event.image} alt="" loading="lazy" />
+            <div class="home-event-card__overlay"></div>
+            <div class="home-event-card__content">
+              <p class="home-event-card__date">{formatDate(event.date)}</p>
+              <h3>{event.title}</h3>
+              <p>{event.description}</p>
+              <span class="home-event-card__location">⌖ {event.location}</span>
+              <Button href={event.slug ? `/events/${event.slug}` : "/events"} variant="secondary" size="sm">Découvrir</Button>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="home-section-link"><Button href="/events" variant="ghost">Voir tous les événements →</Button></div>
+    </Container>
+  </section>
+
+  <section class="home-blue-moon">
+    <div class="home-blue-moon__image" aria-hidden="true"></div>
+    <Container size="wide" class="home-blue-moon__content">
+      <p class="c-eyebrow">Le festival du Coven</p>
+      <h2>Blue Moon</h2>
+      <p>Une célébration des artistes, des collectifs et des musiques électroniques, née de l’envie de créer une expérience libre, collective et hors du temps.</p>
+      <Button href="/blue-moon" size="lg">Entrer dans l’univers Blue Moon</Button>
+    </Container>
+  </section>
+
+  <section class="home-newsletter">
+    <Container size="wide">
+      <div class="home-newsletter__panel">
+        <div>
+          <p class="c-eyebrow">Rester dans le cercle</p>
+          <h2>Les nouvelles du Coven</h2>
+          <p>Programmation, appels à bénévoles et actualités : recevez l’essentiel sans bruit inutile.</p>
+        </div>
+        <form class="home-newsletter__form" action={import.meta.env.PUBLIC_NEWSLETTER_ACTION ?? "/newsletter"} method="post">
+          <label for="home-newsletter-email">Votre adresse e-mail</label>
+          <div>
+            <input id="home-newsletter-email" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr" required />
+            <button type="submit">S’inscrire</button>
+          </div>
+        </form>
+      </div>
+    </Container>
+  </section>
 </BaseLayout>
+
+<script>
+  const carousel = document.querySelector<HTMLElement>("[data-event-carousel]");
+  const previous = document.querySelector<HTMLButtonElement>("[data-event-previous]");
+  const next = document.querySelector<HTMLButtonElement>("[data-event-next]");
+  const moveCarousel = (direction: number) => {
+    if (!carousel) return;
+    carousel.scrollBy({ left: direction * Math.min(carousel.clientWidth * 0.88, 620), behavior: "smooth" });
+  };
+  previous?.addEventListener("click", () => moveCarousel(-1));
+  next?.addEventListener("click", () => moveCarousel(1));
+</script>
