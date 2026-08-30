@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/ui/Container.astro";
+---
+
+<BaseLayout
+  title="Mentions légales — Le Coven"
+  description="Mentions légales du site de l’association Le Coven."
+>
+  <header class="legal-hero">
+    <Container>
+      <p class="c-eyebrow">Informations légales</p>
+      <h1>Mentions légales</h1>
+    </Container>
+  </header>
+
+  <section class="legal-content">
+    <Container>
+      <h2>Éditeur du site</h2>
+      <p>Le présent site est édité par Le Coven, association régie par la loi du 1er juillet 1901, créée le 15 novembre 2023 et déclarée en préfecture de Lille.</p>
+      <dl class="legal-details">
+        <div><dt>Siège social</dt><dd>Maison des Associations, 27 rue Jean Bart, 59000 Lille</dd></div>
+        <div><dt>N° RNA</dt><dd>W595043038</dd></div>
+        <div><dt>SIRET</dt><dd>924 347 834 00039</dd></div>
+        <div><dt>Code APE</dt><dd>90.01Z</dd></div>
+        <div><dt>Licences</dt><dd>PLATESV-D-2024-006881 · 3-011359</dd></div>
+        <div><dt>Contact</dt><dd><a href="mailto:lecoven@etik.com">lecoven@etik.com</a></dd></div>
+      </dl>
+
+      <h2>Direction de la publication</h2>
+      <p>La représentante légale et directrice de la publication est Laura Dekeyser.</p>
+
+      <h2>Hébergement</h2>
+      <p>L’identité et les coordonnées complètes de l’hébergeur seront ajoutées avant la mise en production définitive du site.</p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>Les textes, visuels, photographies, logos et autres contenus de ce site sont protégés. Toute reproduction ou utilisation nécessite l’autorisation préalable de leurs titulaires.</p>
+
+      <h2>Données personnelles</h2>
+      <p>Les informations transmises au moyen des formulaires sont utilisées uniquement pour répondre aux demandes concernées. Pour toute question relative aux données personnelles ou pour exercer vos droits, écrivez à <a href="mailto:administration@lecoven.fr">administration@lecoven.fr</a>.</p>
+    </Container>
+  </section>
+</BaseLayout>

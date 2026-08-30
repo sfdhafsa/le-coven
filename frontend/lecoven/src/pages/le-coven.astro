@@ -2,8 +2,9 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Card from "../components/ui/Card.astro";
 import Container from "../components/ui/Container.astro";
+import Button from "../components/ui/Button.astro";
 
-const STRAPI_URL = import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+const STRAPI_URL = (import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337").replace(/\/$/, "");
 
 interface TextChild { type: "text"; text: string; }
 interface ContentBlock {
@@ -18,7 +19,7 @@ interface StrapiImage {
   formats?: { large?: MediaFormat; medium?: MediaFormat } | null;
 }
 interface PageEntry {
-  titre: string;
+  titre: string | null;
   slug: string;
   surtitre?: string | null;
   resume?: string | null;
@@ -28,9 +29,41 @@ interface PageEntry {
   descriptionSeo?: string | null;
 }
 interface ContentSection {
-  eyebrow: string;
   title: string;
   paragraphs: string[];
+}
+interface CollectiveEntry {
+  name?: string;
+  nom?: string;
+  slug?: string;
+  shortDescription?: string | null;
+  descriptionCourte?: string | null;
+  logo?: StrapiImage | null;
+  isActive?: boolean | null;
+  actif?: boolean | null;
+  displayOrder?: number | null;
+  ordreAffichage?: number | null;
+}
+interface PartnerEntry {
+  name?: string;
+  nom?: string;
+  description?: string | null;
+  logo?: StrapiImage | null;
+  websiteUrl?: string | null;
+  siteWeb?: string | null;
+}
+interface TeamMemberEntry {
+  firstName?: string;
+  prenom?: string;
+  lastName?: string;
+  nom?: string;
+  role?: string | null;
+  profession?: string | null;
+  photo?: StrapiImage | null;
+  isActive?: boolean | null;
+  actif?: boolean | null;
+  displayOrder?: number | null;
+  ordreAffichage?: number | null;
 }
 
 const response = await fetch(
@@ -41,8 +74,18 @@ if (!response.ok) {
 }
 
 const payload: { data: PageEntry[] } = await response.json();
-const page = payload.data[0];
-if (!page) return Astro.redirect("/", 302);
+const entry = payload.data[0];
+if (!entry) return Astro.redirect("/", 302);
+const page = {
+  title: entry.titre ?? "Le Coven",
+  slug: entry.slug,
+  eyebrow: entry.surtitre,
+  summary: entry.resume,
+  content: entry.contenu,
+  heroImage: entry.imageBanniere,
+  seoTitle: entry.titreSeo,
+  seoDescription: entry.descriptionSeo,
+};
 
 const blockText = (block: ContentBlock) =>
   block.children?.map((child) => child.text).join("").trim() ?? "";
@@ -52,15 +95,21 @@ let currentSection: ContentSection | undefined;
 for (const block of page.contenu ?? []) {
   const text = blockText(block);
   if (!text) continue;
-  if (block.type === "heading" && block.level === 3) {
-    currentSection = { eyebrow: text, title: "", paragraphs: [] };
+  if (block.type === "heading" && block.level === 2) {
+    currentSection = { title: text, paragraphs: [] };
     sections.push(currentSection);
     continue;
   }
-  if (!currentSection) continue;
-  if (block.type === "heading" && block.level === 2 && !currentSection.title) {
-    currentSection.title = text;
-  } else if (block.type === "paragraph") {
+  if (block.type === "heading" && block.level === 3) {
+    currentSection = { title: text, paragraphs: [] };
+    sections.push(currentSection);
+    continue;
+  }
+  if (block.type === "paragraph") {
+    if (!currentSection) {
+      currentSection = { title: page.title, paragraphs: [] };
+      sections.push(currentSection);
+    }
     currentSection.paragraphs.push(text);
   }
 }
@@ -71,6 +120,85 @@ const imagePath = page.imageBanniere?.formats?.large?.url
 const heroUrl = imagePath
   ? imagePath.startsWith("http") ? imagePath : `${STRAPI_URL}${imagePath}`
   : undefined;
+
+const mediaUrl = (image?: StrapiImage | null) => {
+  const path = image?.formats?.medium?.url ?? image?.url;
+  if (!path) return undefined;
+  return path.startsWith("http") ? path : `${STRAPI_URL}${path}`;
+};
+
+let collectives: Array<{ name: string; slug: string; description?: string; logo?: StrapiImage }> = [];
+let partners: Array<{ name: string; description?: string | null; websiteUrl?: string | null; logo?: StrapiImage | null }> = [];
+let teamMembers: Array<{
+  firstName: string;
+  lastName: string;
+  role: string;
+  profession: string | null;
+  photo: StrapiImage | null;
+}> = [];
+
+try {
+  const response = await fetch(`${STRAPI_URL}/api/collectives?populate=logo`);
+  if (response.ok) {
+    const payload: { data?: CollectiveEntry[] } = await response.json();
+    const entries = (payload.data ?? [])
+      .filter((item) => item.isActive !== false && item.actif !== false)
+      .sort((a, b) => (a.displayOrder ?? a.ordreAffichage ?? 0) - (b.displayOrder ?? b.ordreAffichage ?? 0))
+      .map((item) => ({
+        name: item.name ?? item.nom ?? "Collectif",
+        slug: item.slug ?? "",
+        description: item.shortDescription ?? item.descriptionCourte ?? undefined,
+        logo: item.logo ?? undefined,
+      }))
+      .filter((item) => item.slug);
+    collectives = entries;
+  }
+} catch {
+  collectives = [];
+}
+
+try {
+  const response = await fetch(`${STRAPI_URL}/api/partners?populate=logo`);
+  if (response.ok) {
+    const payload: { data?: PartnerEntry[] } = await response.json();
+    partners = (payload.data ?? []).map((item) => ({
+      name: item.name ?? item.nom ?? "Partenaire",
+      description: item.description,
+      websiteUrl: item.websiteUrl ?? item.siteWeb,
+      logo: item.logo,
+    }));
+  }
+} catch {
+  partners = [];
+}
+
+try {
+  const response = await fetch(`${STRAPI_URL}/api/team-members?populate=photo`);
+  if (response.ok) {
+    const payload: { data?: TeamMemberEntry[] } = await response.json();
+    const entries = (payload.data ?? [])
+      .filter((member) => member.isActive !== false && member.actif !== false)
+      .sort((a, b) => (a.displayOrder ?? a.ordreAffichage ?? 0) - (b.displayOrder ?? b.ordreAffichage ?? 0))
+      .map((member) => ({
+        firstName: member.firstName ?? member.prenom ?? "",
+        lastName: member.lastName ?? member.nom ?? "",
+        role: member.role ?? "Cour Centrale",
+        profession: member.profession ?? null,
+        photo: member.photo ?? null,
+      }))
+      .filter((member) => member.firstName || member.lastName);
+    if (entries.length > 0) teamMembers = entries;
+  }
+} catch {
+  teamMembers = [];
+}
+
+const sectionAnchor = (title: string) => title
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/(^-|-$)/g, "");
 ---
 
 <BaseLayout
@@ -83,9 +211,9 @@ const heroUrl = imagePath
   >
     <div class="association-page-hero__star" aria-hidden="true"></div>
     <Container size="wide" class="association-page-hero__content">
-      {page.surtitre && <p class="c-eyebrow">{page.surtitre}</p>}
-      <h1>{page.titre}</h1>
-      {page.resume && <p class="association-page-hero__summary">{page.resume}</p>}
+      {page.eyebrow && <p class="c-eyebrow">{page.eyebrow}</p>}
+      <h1>{page.title}</h1>
+      {page.summary && <p class="association-page-hero__summary">{page.summary}</p>}
     </Container>
   </header>
 
@@ -95,18 +223,134 @@ const heroUrl = imagePath
         {sections.map((section, index) => (
           <Card
             variant={index === sections.length - 1 ? "glow" : "outline"}
+            id={sectionAnchor(section.title)}
             class:list={[
               "association-content-card",
               index === sections.length - 1 && "association-content-card--featured",
             ]}
           >
-            <p class="association-content-card__eyebrow">{section.eyebrow}</p>
-            {section.title && <h2>{section.title}</h2>}
+            <h2>{section.title}</h2>
             <div class="association-content-card__copy">
               {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
             </div>
+            {section.title === "Nos missions" && (
+              <Button href="/articles/mission" variant="secondary" size="sm">Lire notre mission</Button>
+            )}
+            {section.title === "Notre histoire" && (
+              <Button href="/articles/histoire" variant="secondary" size="sm">Découvrir notre histoire</Button>
+            )}
           </Card>
         ))}
+      </div>
+    </Container>
+  </section>
+
+  <section class="coven-team" id="cour-centrale">
+    <Container size="wide">
+      <div class="association-section-heading">
+        <p class="c-eyebrow">L’équipe dirigeante</p>
+        <h2>La Cour Centrale</h2>
+        <p>Neuf membres réunis pour faire vivre le projet associatif, culturel et artistique du Coven.</p>
+      </div>
+      <div class="coven-team__grid">
+        {teamMembers.map((member) => (
+          <article class="coven-member-card">
+            <div class="coven-member-card__portrait">
+              {mediaUrl(member.photo) ? (
+                <img src={mediaUrl(member.photo)} alt={`${member.firstName} ${member.lastName}`} loading="lazy" />
+              ) : (
+                <span aria-hidden="true">{member.firstName.charAt(0)}{member.lastName.charAt(0)}</span>
+              )}
+            </div>
+            <p class="coven-member-card__role">{member.role}</p>
+            <h3>{member.firstName} {member.lastName}</h3>
+            {member.profession && <p class="coven-member-card__profession">{member.profession}</p>}
+          </article>
+        ))}
+      </div>
+      {teamMembers.length === 0 && (
+        <p class="partner-empty">Aucun membre d’équipe publié n’est actuellement disponible dans Strapi.</p>
+      )}
+      <div class="coven-thanks">
+        <p class="c-eyebrow">Merci</p>
+        <p>Le Coven remercie chaleureusement ses adhérent·es, bénévoles, partenaires, salarié·es et prestataires. Leur engagement rend chaque projet possible.</p>
+      </div>
+    </Container>
+  </section>
+
+  <section class="association-directory" id="collectifs">
+    <Container size="wide">
+      <div class="association-section-heading">
+        <p class="c-eyebrow">Créer ensemble</p>
+        <h2>Les collectifs</h2>
+        <p>Des identités artistiques singulières réunies autour d’une même énergie.</p>
+      </div>
+      <div class="collective-card-grid">
+        {collectives.map((collective) => (
+          <a class="collective-card" href={`/collectifs/${collective.slug}`}>
+            <div class="collective-card__visual">
+              {mediaUrl(collective.logo) ? (
+                <img src={mediaUrl(collective.logo)} alt="" loading="lazy" />
+              ) : (
+                <span aria-hidden="true">✦</span>
+              )}
+            </div>
+            <div>
+              <h3>{collective.name}</h3>
+              <p>{collective.description}</p>
+              <span class="collective-card__link">Voir la page <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
+        ))}
+      </div>
+      {collectives.length === 0 && (
+        <p class="partner-empty">Aucun collectif publié n’est actuellement disponible dans Strapi.</p>
+      )}
+    </Container>
+  </section>
+
+  <section class="association-partners" id="partenaires">
+    <Container size="wide">
+      <div class="association-section-heading">
+        <p class="c-eyebrow">Ils rendent le projet possible</p>
+        <h2>Partenaires et financeurs</h2>
+      </div>
+      {partners.length > 0 ? (
+        <div class="partner-logo-grid">
+          {partners.map((partner) => (
+            <a
+              class="partner-logo-card"
+              href={partner.websiteUrl ?? "#partenaires"}
+              target={partner.websiteUrl ? "_blank" : undefined}
+              rel={partner.websiteUrl ? "noreferrer" : undefined}
+              aria-label={partner.websiteUrl ? `${partner.name}, ouvrir le site` : partner.name}
+            >
+              {mediaUrl(partner.logo) ? (
+                <img src={mediaUrl(partner.logo)} alt={partner.name} loading="lazy" />
+              ) : (
+                <span class="partner-logo-card__fallback">{partner.name}</span>
+              )}
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="partner-empty">Les logos des partenaires et financeurs seront affichés ici dès leur publication dans Strapi.</p>
+      )}
+    </Container>
+  </section>
+
+  <section class="association-membership" id="adhesion">
+    <Container size="wide">
+      <div class="association-membership__panel">
+        <div>
+          <p class="c-eyebrow">Faire vivre le projet</p>
+          <h2>Rejoindre Le Coven</h2>
+          <p>Adhérez à l’association, soutenez ses actions et participez à une aventure culturelle collective.</p>
+        </div>
+        <Button
+          href={import.meta.env.PUBLIC_HELLOASSO_URL ?? "https://www.helloasso.com/associations/le-coven"}
+          size="lg"
+        >Adhérer avec HelloAsso</Button>
       </div>
     </Container>
   </section>
