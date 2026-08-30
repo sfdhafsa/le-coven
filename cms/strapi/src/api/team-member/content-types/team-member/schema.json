@@ -4,9 +4,8 @@
   "info": {
     "singularName": "team-member",
     "pluralName": "team-members",
-    "displayName": "Membre d'équipe",
+    "displayName": "Membre de l'équipe",
     "description": "Membres de la Cour Centrale du Coven"
-    "displayName": "Membre de l'équipe"
   },
   "options": {
     "draftAndPublish": true

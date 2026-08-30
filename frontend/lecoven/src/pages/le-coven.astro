@@ -58,6 +58,7 @@ interface TeamMemberEntry {
   lastName?: string;
   nom?: string;
   role?: string | null;
+  fonction?: string | null;
   profession?: string | null;
   photo?: StrapiImage | null;
   isActive?: boolean | null;
@@ -182,7 +183,7 @@ try {
       .map((member) => ({
         firstName: member.firstName ?? member.prenom ?? "",
         lastName: member.lastName ?? member.nom ?? "",
-        role: member.role ?? "Cour Centrale",
+        role: member.role ?? member.fonction ?? "Cour Centrale",
         profession: member.profession ?? null,
         photo: member.photo ?? null,
       }))
