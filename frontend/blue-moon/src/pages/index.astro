@@ -1,19 +1,101 @@
 ---
 import "../styles/global.css";
+
+const covenUrl = (import.meta.env.PUBLIC_COVEN_URL ?? "http://localhost:4321").replace(/\/$/, "");
+const ticketUrl = import.meta.env.PUBLIC_TICKETING_URL;
+const currentYear = new Date().getFullYear();
+const links = [
+  { label: "Accueil", href: `${covenUrl}/` },
+  { label: "Le Coven", href: `${covenUrl}/le-coven` },
+  { label: "Événements", href: `${covenUrl}/events` },
+  { label: "Blue Moon", href: "/" },
+  { label: "Contact", href: `${covenUrl}/contact` },
+];
 ---
 
 <!doctype html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Blue Moon, le festival de musiques électroniques imaginé par Le Coven." />
+    <meta name="theme-color" content="#07010f" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content="Blue Moon Festival" />
-    <title>Blue Moon Festival</title>
+    <title>Blue Moon Festival — Le Coven</title>
   </head>
-  <body class="min-h-screen bg-slate-950 text-slate-100">
-    <main class="grid min-h-screen place-items-center px-6">
-      <h1 class="text-4xl font-bold">Blue Moon Festival</h1>
+  <body>
+    <header class="site-header">
+      <div class="shell site-header__container">
+        <nav class="site-nav" aria-label="Navigation principale">
+          <a class="site-brand" href={covenUrl} aria-label="Le Coven, accueil">
+            <img src="/images/logo-le-coven.jpeg" alt="" width="48" height="48" />
+            <span class="site-brand__name">Le Coven</span>
+          </a>
+          <ul class="desktop-navigation">
+            {links.map((link) => <li><a class:list={["nav-link", link.label === "Blue Moon" && "nav-link--active"]} href={link.href} aria-current={link.label === "Blue Moon" ? "page" : undefined}>{link.label}</a></li>)}
+          </ul>
+          <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+        </nav>
+      </div>
+      <div id="mobile-nav" class="mobile-navigation" hidden>
+        <nav class="shell" aria-label="Navigation mobile"><ul>{links.map((link) => <li><a class:list={["mobile-nav-link", link.label === "Blue Moon" && "mobile-nav-link--active"]} href={link.href}>{link.label}</a></li>)}</ul></nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="blue-moon-title">
+        <div class="hero-image" aria-hidden="true"></div><div class="hero-glow" aria-hidden="true"></div>
+        <span class="star star-one" aria-hidden="true">✦</span><span class="star star-two" aria-hidden="true">✦</span><span class="star star-three" aria-hidden="true">✦</span>
+        <div class="hero-content shell">
+          <p class="festival-meta">10 · 11 · 12 mai 2025 — Domaine de la Lune, Flandres</p>
+          <h1 id="blue-moon-title"><span>Blue</span><span>Moon</span></h1>
+          <p class="festival-label">Festival</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#festival">Visiter le site du festival <span aria-hidden="true">→</span></a>
+            {ticketUrl && <a class="button button-outline" href={ticketUrl} target="_blank" rel="noreferrer">Billetterie <span aria-hidden="true">↗</span></a>}
+          </div>
+        </div>
+        <a class="scroll-cue" href="#festival"><span>Explorer</span><span aria-hidden="true">↓</span></a>
+      </section>
+
+      <section class="festival-section" id="festival">
+        <div class="shell festival-grid">
+          <div><p class="eyebrow">Danser sous la même lune</p><h2>Une expérience à part entière.</h2></div>
+          <div class="festival-copy">
+            <p>Blue Moon réunit les énergies créatives du Coven pour faire naître un festival libre, immersif et profondément collectif.</p>
+            <p>Scènes électroniques, installations, performances et espaces de respiration composent un voyage pensé du premier battement jusqu’au lever du jour.</p>
+          </div>
+        </div>
+        <div class="pillars shell" aria-label="Les piliers du festival">
+          <article><span>01</span><h3>Musiques</h3><p>Des sélections électroniques audacieuses, portées par la scène locale et ses invité·es.</p></article>
+          <article><span>02</span><h3>Créations</h3><p>Une scénographie et des performances qui transforment le lieu à chaque édition.</p></article>
+          <article><span>03</span><h3>Rencontres</h3><p>Un espace accueillant pour partager, découvrir et célébrer ensemble.</p></article>
+        </div>
+      </section>
+
+      <section class="next-edition">
+        <div class="shell edition-card">
+          <div><p class="eyebrow">La prochaine lune approche</p><h2>Prochaine édition</h2><p>Dates, lieu, programmation et billetterie seront révélés prochainement.</p></div>
+          <a class="button button-primary" href={import.meta.env.PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/lecoven.asso/"} target="_blank" rel="noreferrer">Suivre les annonces <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-content">
+        <a class="footer-email" href="mailto:lecoven@etik.com">lecoven@etik.com</a>
+        <nav class="footer-social" aria-label="Réseaux sociaux"><a href={import.meta.env.PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/lecoven.asso/"} target="_blank" rel="noreferrer">Instagram</a><a href="https://www.facebook.com/LeCoven.asso" target="_blank" rel="noreferrer">Facebook</a><a href="https://linktr.ee/LeCoven.asso" target="_blank" rel="noreferrer">Tous les liens</a></nav>
+        <a href={`${covenUrl}/mentions-legales`}>Mentions légales</a><p>© {currentYear} Le Coven — RNA W595043038</p>
+      </div>
+    </footer>
+
+    <script>
+      const button = document.querySelector<HTMLButtonElement>(".menu-toggle");
+      const menu = document.querySelector<HTMLElement>("#mobile-nav");
+      const closeMenu = () => { if (!button || !menu) return; menu.hidden = true; button.setAttribute("aria-expanded", "false"); button.setAttribute("aria-label", "Ouvrir le menu"); };
+      button?.addEventListener("click", () => { if (!menu) return; const open = menu.hidden; menu.hidden = !open; button.setAttribute("aria-expanded", String(open)); button.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu"); });
+      menu?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+      document.addEventListener("keydown", (event) => event.key === "Escape" && closeMenu());
+    </script>
   </body>
 </html>

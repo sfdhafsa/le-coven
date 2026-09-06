@@ -5,7 +5,7 @@ const links = [
   { label: "Accueil", href: "/" },
   { label: "Le Coven", href: "/le-coven" },
   { label: "Événements", href: "/events" },
-  { label: "Blue Moon", href: "/blue-moon" },
+  { label: "Blue Moon", href: import.meta.env.PUBLIC_BLUE_MOON_URL ?? "http://localhost:4322" },
   { label: "Contact", href: "/contact" },
 ];
 
