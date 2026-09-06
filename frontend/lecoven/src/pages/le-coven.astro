@@ -93,7 +93,7 @@ const blockText = (block: ContentBlock) =>
 const sections: ContentSection[] = [];
 let currentSection: ContentSection | undefined;
 
-for (const block of page.contenu ?? []) {
+for (const block of page.content ?? []) {
   const text = blockText(block);
   if (!text) continue;
   if (block.type === "heading" && block.level === 2) {
@@ -115,9 +115,9 @@ for (const block of page.contenu ?? []) {
   }
 }
 
-const imagePath = page.imageBanniere?.formats?.large?.url
-  ?? page.imageBanniere?.formats?.medium?.url
-  ?? page.imageBanniere?.url;
+const imagePath = page.heroImage?.formats?.large?.url
+  ?? page.heroImage?.formats?.medium?.url
+  ?? page.heroImage?.url;
 const heroUrl = imagePath
   ? imagePath.startsWith("http") ? imagePath : `${STRAPI_URL}${imagePath}`
   : undefined;
@@ -203,8 +203,8 @@ const sectionAnchor = (title: string) => title
 ---
 
 <BaseLayout
-  title={page.titreSeo || `${page.titre} — Association`}
-  description={page.descriptionSeo || page.resume || undefined}
+  title={page.seoTitle || `${page.title} — Association`}
+  description={page.seoDescription || page.summary || undefined}
 >
   <header
     class="association-page-hero"
