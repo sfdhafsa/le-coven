@@ -1,0 +1,137 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/ui/Button.astro";
+import Container from "../components/ui/Container.astro";
+
+const instagramUrl = import.meta.env.PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/lecoven.asso/";
+const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook.com/LeCoven.asso";
+---
+
+<BaseLayout
+  title="Contact — Le Coven"
+  description="Contactez Le Coven pour une question générale, une demande presse, un partenariat ou une question administrative."
+>
+  <section class="contact-page">
+    <div class="contact-page__geometry contact-page__geometry--one" aria-hidden="true"></div>
+    <div class="contact-page__geometry contact-page__geometry--two" aria-hidden="true"></div>
+
+    <Container size="wide" class="contact-page__layout">
+      <div class="contact-panel contact-panel--form">
+        <header class="contact-heading">
+          <p class="c-eyebrow"><span aria-hidden="true">✦</span> Formulaire <span aria-hidden="true">✦</span></p>
+          <h1>Écrivez-nous</h1>
+          <p>Choisissez le service concerné : votre message sera adressé à la bonne équipe.</p>
+        </header>
+
+        <form class="contact-form" data-contact-form>
+          <div class="contact-form__row">
+            <label>
+              <span>Nom</span>
+              <input name="name" type="text" autocomplete="name" required />
+            </label>
+            <label>
+              <span>E-mail</span>
+              <input name="email" type="email" autocomplete="email" required />
+            </label>
+          </div>
+
+          <label>
+            <span>Service</span>
+            <select name="service" required>
+              <option value="" selected disabled>Sélectionner un service</option>
+              <option value="Question générale" data-recipient="lecoven@etik.com">Contact général</option>
+              <option value="Presse" data-recipient="lecoven@etik.com">Presse</option>
+              <option value="Partenariat" data-recipient="lecoven@etik.com">Partenariats</option>
+              <option value="Bénévolat" data-recipient="lecoven@etik.com">Bénévolat</option>
+              <option value="Administration" data-recipient="administration@lecoven.fr">Administration et juridique</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Message</span>
+            <textarea name="message" rows="7" required></textarea>
+          </label>
+
+          <div class="contact-form__actions">
+            <Button type="submit" size="lg">
+              Envoyer
+              <span aria-hidden="true">→</span>
+            </Button>
+            <p class="contact-form__hint">Votre application e-mail s’ouvrira avec le message prérempli.</p>
+          </div>
+          <p class="contact-form__status" aria-live="polite" data-contact-status></p>
+        </form>
+      </div>
+
+      <aside class="contact-panel contact-panel--details" aria-labelledby="contact-details-title">
+        <header class="contact-heading">
+          <p class="c-eyebrow"><span aria-hidden="true">✦</span> Coordonnées <span aria-hidden="true">✦</span></p>
+          <h2 id="contact-details-title">Nous trouver</h2>
+          <p>Une adresse dédiée selon la nature de votre demande.</p>
+        </header>
+
+        <div class="contact-details">
+          <article class="contact-detail-card">
+            <p class="contact-detail-card__label">Contact général · Presse · Partenariats</p>
+            <a href="mailto:lecoven@etik.com">
+              <span aria-hidden="true">✉</span>
+              lecoven@etik.com
+            </a>
+            <p>Pour toute question publique, demande presse, proposition ou partenariat.</p>
+          </article>
+
+          <article class="contact-detail-card">
+            <p class="contact-detail-card__label">Mentions légales · Administration</p>
+            <a href="mailto:administration@lecoven.fr">
+              <span aria-hidden="true">✉</span>
+              administration@lecoven.fr
+            </a>
+            <p>Pour les questions administratives, juridiques et contractuelles.</p>
+          </article>
+
+          <article class="contact-detail-card">
+            <p class="contact-detail-card__label">Réseaux sociaux</p>
+            <nav class="contact-socials" aria-label="Réseaux sociaux du Coven">
+              <a href={facebookUrl} target="_blank" rel="noreferrer">Facebook <span aria-hidden="true">↗</span></a>
+              <a href={instagramUrl} target="_blank" rel="noreferrer">Instagram <span aria-hidden="true">↗</span></a>
+              <a href="https://linktr.ee/LeCoven.asso" target="_blank" rel="noreferrer">Tous les liens <span aria-hidden="true">↗</span></a>
+            </nav>
+          </article>
+        </div>
+
+        <p class="contact-privacy">
+          Les informations saisies servent uniquement à préparer votre message. Elles ne sont pas enregistrées sur ce site.
+        </p>
+      </aside>
+    </Container>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+  const status = document.querySelector<HTMLElement>("[data-contact-status]");
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    const data = new FormData(form);
+    const select = form.elements.namedItem("service") as HTMLSelectElement;
+    const recipient = select.selectedOptions[0]?.dataset.recipient;
+
+    if (!recipient) {
+      if (status) status.textContent = "Veuillez sélectionner un service.";
+      return;
+    }
+
+    const name = String(data.get("name") ?? "");
+    const email = String(data.get("email") ?? "");
+    const service = String(data.get("service") ?? "Contact");
+    const message = String(data.get("message") ?? "");
+    const subject = `[Site Le Coven] ${service}`;
+    const body = `Nom : ${name}\nE-mail : ${email}\n\n${message}`;
+
+    window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    if (status) status.textContent = `Message préparé pour ${recipient}.`;
+  });
+</script>

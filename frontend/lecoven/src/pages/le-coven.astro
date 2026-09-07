@@ -93,7 +93,7 @@ const blockText = (block: ContentBlock) =>
 const sections: ContentSection[] = [];
 let currentSection: ContentSection | undefined;
 
-for (const block of page.contenu ?? []) {
+for (const block of page.content ?? []) {
   const text = blockText(block);
   if (!text) continue;
   if (block.type === "heading" && block.level === 2) {
@@ -115,12 +115,22 @@ for (const block of page.contenu ?? []) {
   }
 }
 
-const imagePath = page.imageBanniere?.formats?.large?.url
-  ?? page.imageBanniere?.formats?.medium?.url
-  ?? page.imageBanniere?.url;
-const heroUrl = imagePath
-  ? imagePath.startsWith("http") ? imagePath : `${STRAPI_URL}${imagePath}`
-  : undefined;
+const imagePath = page.heroImage?.formats?.large?.url
+  ?? page.heroImage?.formats?.medium?.url
+  ?? page.heroImage?.url;
+const fallbackHeroUrl = "/images/hero-concert.jfif";
+let heroUrl = fallbackHeroUrl;
+
+if (imagePath) {
+  const candidateUrl = imagePath.startsWith("http") ? imagePath : `${STRAPI_URL}${imagePath}`;
+
+  try {
+    const imageResponse = await fetch(candidateUrl, { method: "HEAD" });
+    if (imageResponse.ok) heroUrl = candidateUrl;
+  } catch {
+    heroUrl = fallbackHeroUrl;
+  }
+}
 
 const mediaUrl = (image?: StrapiImage | null) => {
   const path = image?.formats?.medium?.url ?? image?.url;
@@ -203,12 +213,12 @@ const sectionAnchor = (title: string) => title
 ---
 
 <BaseLayout
-  title={page.titreSeo || `${page.titre} — Association`}
-  description={page.descriptionSeo || page.resume || undefined}
+  title={page.seoTitle || `${page.title} — Association`}
+  description={page.seoDescription || page.summary || undefined}
 >
   <header
     class="association-page-hero"
-    style={heroUrl ? `--association-hero-image: url('${heroUrl}')` : undefined}
+    style={`--association-hero-image: url('${heroUrl}')`}
   >
     <div class="association-page-hero__star" aria-hidden="true"></div>
     <Container size="wide" class="association-page-hero__content">
