@@ -47,27 +47,57 @@ const ticketUrl = import.meta.env.PUBLIC_TICKETING_URL;
 </BaseLayout>
 
 <style>
-.shell { width: min(100% - 2rem, 90rem); margin-inline: auto; }
-.hero { position: relative; display: grid; min-height: calc(100svh - 4.5rem); place-items: center; overflow: hidden; isolation: isolate; padding: clamp(4rem, 9vh, 6rem) 0 clamp(3rem, 7vh, 5rem); }
+/* Let narrow viewports accommodate the browser's scrollbar. */
+:global(body) { min-width: 0; }
+.shell { width: calc(100% - 2 * clamp(1.25rem, 4vw, 3rem)); max-width: 84rem; min-width: 0; margin-inline: auto; }
+.hero { position: relative; display: grid; min-height: calc(100svh - 8.125rem); place-items: center; overflow: hidden; isolation: isolate; padding: clamp(1.5rem, 4svh, 3rem) 0 clamp(3rem, 7svh, 4rem); }
 .hero-image, .hero-glow { position: absolute; inset: 0; }.hero-image { z-index: -3; background: url("/images/hero-performer.png") center 35% / cover no-repeat; filter: saturate(.72) contrast(1.1); transform: scale(1.03); }
 .hero-glow { z-index: -2; background: radial-gradient(ellipse at 50% 57%, rgb(126 34 206 / .36), transparent 38%), linear-gradient(180deg, rgb(6 1 15 / .82), rgb(14 2 28 / .72) 48%, #07010f 100%), linear-gradient(90deg, #05010d 0%, transparent 25%, transparent 75%, #05010d 100%); }
 .hero::after { position: absolute; z-index: -1; inset: 0; background-image: linear-gradient(rgb(216 180 254 / .025) 1px, transparent 1px), linear-gradient(90deg, rgb(216 180 254 / .025) 1px, transparent 1px); background-size: 68px 68px; mask-image: linear-gradient(to bottom, transparent, #000 40%, transparent); content: ""; }
 .hero-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; }.festival-meta { margin: 0; border: 1px solid rgb(192 132 252 / .4); border-radius: 999px; padding: .62rem 1.4rem; color: rgb(216 180 254 / .73); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: clamp(.62rem, 1.4vw, .78rem); letter-spacing: .28em; text-transform: uppercase; backdrop-filter: blur(10px); }
-h1 { position: relative; z-index: 3; margin: clamp(1.2rem, 4vh, 3rem) 0 0; font-size: clamp(6.5rem, min(18vw, 26vh), 15.5rem); font-weight: 900; line-height: .78; letter-spacing: -.075em; filter: drop-shadow(0 20px 38px rgb(36 4 66 / .82)); }
+h1 { position: relative; z-index: 3; margin: clamp(1rem, 3svh, 2rem) 0 0; font-size: clamp(4rem, min(18vw, 21svh), 13rem); font-weight: 900; line-height: .78; letter-spacing: -.075em; filter: drop-shadow(0 20px 38px rgb(36 4 66 / .82)); }
 h1 span { display: block; background: linear-gradient(100deg, #e9d5ff 0%, #c084fc 45%, #e75df7 100%); background-clip: text; color: transparent; } h1 span + span { margin-top: .22em; }
-.festival-label { margin: 1.8rem 0 0; color: rgb(216 180 254 / .74); font-size: clamp(.9rem, 2vw, 1.35rem); letter-spacing: .34em; text-transform: uppercase; }
-.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin-top: 2.6rem; }.button { display: inline-flex; min-width: min(100%, 23rem); min-height: 3.6rem; align-items: center; justify-content: center; gap: .8rem; border: 1px solid transparent; border-radius: 999px; padding: .85rem 1.8rem; font-weight: 800; transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }.button:hover { transform: translateY(-3px); }.button-primary { background: linear-gradient(135deg, #d15aef, #b54be1); color: #12021c; box-shadow: 0 0 32px rgb(217 70 239 / .3); }.button-primary:hover { box-shadow: 0 0 40px rgb(217 70 239 / .48); }.button-outline { border-color: rgb(34 211 238 / .55); background: rgb(3 12 22 / .45); color: #67e8f9; }
+.festival-label { margin: clamp(1rem, 3svh, 1.8rem) 0 0; color: rgb(216 180 254 / .74); font-size: clamp(.9rem, 2vw, 1.35rem); letter-spacing: .34em; text-transform: uppercase; }
+.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; width: 100%; margin-top: clamp(1.25rem, 3svh, 2.6rem); }.button { display: inline-flex; max-width: 100%; min-width: 0; width: min(100%, 23rem); text-align: center; line-height: 1.4; min-height: 3.6rem; align-items: center; justify-content: center; gap: .8rem; border: 1px solid transparent; border-radius: 999px; padding: .85rem 1.8rem; font-weight: 800; transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }.button:hover { transform: translateY(-3px); }.button-primary { background: linear-gradient(135deg, #d15aef, #b54be1); color: #12021c; box-shadow: 0 0 32px rgb(217 70 239 / .3); }.button-primary:hover { box-shadow: 0 0 40px rgb(217 70 239 / .48); }.button-outline { border-color: rgb(34 211 238 / .55); background: rgb(3 12 22 / .45); color: #67e8f9; }
 .star { position: absolute; color: rgb(217 70 239 / .34); font-size: 2.6rem; text-shadow: 0 0 20px currentColor; animation: pulse 4s ease-in-out infinite; }.star-one { top: 24%; left: 8%; }.star-two { top: 34%; right: 10%; animation-delay: -1.2s; }.star-three { right: 8%; bottom: 14%; animation-delay: -2.2s; }.scroll-cue { position: absolute; right: clamp(1rem, 4vw, 4rem); bottom: 1.5rem; display: flex; align-items: center; gap: .7rem; color: #67e8f9; font-family: ui-monospace, monospace; font-size: .65rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; }
 
 .festival-section { padding-block: clamp(5rem, 10vw, 9rem); background: radial-gradient(circle at 75% 12%, rgb(126 34 206 / .2), transparent 34rem), #080211; }.festival-grid { display: grid; gap: 2.5rem; }.eyebrow { margin: 0; color: #e879f9; font-size: .7rem; font-weight: 850; letter-spacing: .26em; text-transform: uppercase; }
-h2 { max-width: 46rem; margin: 1rem 0 0; font-size: clamp(2.8rem, 7vw, 5.8rem); font-weight: 850; line-height: .96; letter-spacing: -.055em; }.festival-copy { display: grid; gap: 1.2rem; align-content: end; }.festival-copy p, .edition-card p { margin: 0; color: rgb(233 213 255 / .6); font-size: 1.02rem; line-height: 1.85; }
+h2 { max-width: 46rem; margin: 1rem 0 0; font-size: clamp(2rem, 5vw, 4.5rem); font-weight: 850; line-height: .96; letter-spacing: -.055em; }.festival-copy { display: grid; gap: 1.2rem; align-content: end; }.festival-copy p, .edition-card p { margin: 0; color: rgb(233 213 255 / .6); font-size: 1.02rem; line-height: 1.85; }
 .pillars { display: grid; gap: 1rem; margin-top: clamp(3.5rem, 7vw, 6rem); }.pillars article { min-height: 16rem; border: 1px solid rgb(192 132 252 / .18); border-radius: 1.6rem; padding: 1.6rem; background: linear-gradient(145deg, rgb(48 13 73 / .5), rgb(10 3 20 / .88)); }.pillars span { color: #67e8f9; font-family: ui-monospace, monospace; font-size: .7rem; }.pillars h3 { margin: 3.5rem 0 .8rem; font-size: 1.5rem; }.pillars p { margin: 0; color: rgb(233 213 255 / .52); line-height: 1.7; }
-.next-edition { padding-block: clamp(4rem, 9vw, 7rem); background: #05010b; }.edition-card { display: grid; align-items: center; gap: 2.5rem; border: 1px solid rgb(232 121 249 / .28); border-radius: 2rem; padding: clamp(2rem, 6vw, 4.5rem); background: radial-gradient(circle at 85% 25%, rgb(217 70 239 / .22), transparent 24rem), linear-gradient(135deg, #240836, #0d0318); }.edition-card h2 { margin-bottom: 1.2rem; font-size: clamp(2.4rem, 6vw, 4.5rem); }
+.next-edition { padding-block: clamp(4rem, 9vw, 7rem); background: #05010b; }.edition-card { display: grid; align-items: center; gap: 2.5rem; border: 1px solid rgb(232 121 249 / .28); border-radius: 2rem; padding: clamp(2rem, 6vw, 4.5rem); background: radial-gradient(circle at 85% 25%, rgb(217 70 239 / .22), transparent 24rem), linear-gradient(135deg, #240836, #0d0318); }.edition-card h2 { margin-bottom: 1.2rem; font-size: clamp(1.85rem, 4vw, 3.5rem); }
 
 @keyframes pulse { 0%,100% { opacity: .35; transform: scale(.82) rotate(0); } 50% { opacity: .9; transform: scale(1.12) rotate(12deg); } }
-@media (min-width: 768px) { .desktop-navigation { display: flex; }.menu-toggle, .mobile-navigation { display: none !important; }.festival-grid { grid-template-columns: 1.15fr .85fr; }.pillars { grid-template-columns: repeat(3, 1fr); }.edition-card { grid-template-columns: 1fr auto; } }
-@media (max-width: 600px) { .site-brand__name { font-size: 1.1rem; }.hero { padding: clamp(4.5rem, 10vh, 6rem) 0 clamp(2.5rem, 7vh, 4rem); }.festival-meta { max-width: 95%; padding-block: .4rem; line-height: 1.45; }.hero-actions, .button { width: 100%; }.scroll-cue { display: none; }.star { font-size: 1.7rem; }.footer-content { flex-direction: column; text-align: center; } }
-@media (max-width: 600px) and (max-height: 650px) { h1 { margin-top: .8rem; font-size: clamp(5.75rem, min(26vw, 22vh), 7.4rem); }.festival-label { margin-top: .9rem; }.hero-actions { margin-top: 1.2rem; }.button { min-height: 3.15rem; }.festival-meta { font-size: .56rem; } }
+/* Keep grid children flexible as text wraps on smaller screens. */
+.festival-grid > *, .edition-card > *, .pillars > * { min-width: 0; }
+h2, h3, .festival-copy, .edition-card p { overflow-wrap: anywhere; }
+#festival { scroll-margin-top: 5.5rem; }
+@media (min-width: 768px) {
+  .festival-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+  .pillars { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  .edition-card { grid-template-columns: minmax(0, 1fr) minmax(15rem, 23rem); }
+}
+@media (max-width: 767px) {
+  .hero { min-height: calc(100svh - 10.125rem); }
+  h1 { font-size: clamp(4rem, min(26vw, 21svh), 8rem); }
+  .festival-meta { max-width: 100%; padding: .6rem .9rem; font-size: .65rem; line-height: 1.6; letter-spacing: .16em; }
+  .festival-section, .next-edition { padding-block: 3.5rem; }
+  .pillars { margin-top: 2.5rem; }
+  .pillars article { min-height: auto; }
+  .pillars h3 { margin-top: 1.5rem; }
+  .edition-card { padding: 1.5rem; gap: 1.5rem; border-radius: 1.5rem; }
+  .scroll-cue { display: none; }
+  .star { font-size: 1.7rem; }
+}
+@media (max-width: 480px) {
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .button { width: 100%; padding-inline: 1rem; }
+}
+@media (max-height: 500px) and (min-width: 600px) {
+  .hero { min-height: auto; }
+  h1 { font-size: clamp(4rem, 12vw, 7rem); }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
 
 </style>
