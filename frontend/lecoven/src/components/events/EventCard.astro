@@ -1,0 +1,18 @@
+---
+import { category, dateLabel, eventHref, location, mediaUrl, type EventEntry } from "../../lib/events";
+interface Props { event: EventEntry; }
+const { event } = Astro.props;
+---
+<article class="event-card">
+  <a href={eventHref(event)} class="event-card__image" tabindex="-1" aria-hidden="true">
+    <img src={mediaUrl(event.imageCouverture) || "/images/hero-concert.jfif"} alt="" loading="lazy" />
+    <span class="event-badge">{event.annule ? "Annulé" : event.complet ? "Complet" : category(event)}</span>
+  </a>
+  <div class="event-card__body">
+    <p class="event-date">{dateLabel(event.dateDebut)}</p>
+    <h3><a href={eventHref(event)}>{event.titre}</a></h3>
+    <p class="event-location">{location(event)}</p>
+    <p>{event.descriptionCourte}</p>
+    <a class="event-link" href={eventHref(event)} aria-label={`Découvrir ${event.titre}`}>Découvrir <span aria-hidden="true">↗</span></a>
+  </div>
+</article>

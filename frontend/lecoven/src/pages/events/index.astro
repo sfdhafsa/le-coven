@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EventCard from "../../components/events/EventCard.astro";
+import { getEvents, isPast, type EventEntry } from "../../lib/events";
+import "../../styles/events.css";
+let events: EventEntry[] = [];
+let unavailable = false;
+try { events = await getEvents(); } catch (error) { unavailable = true; console.warn("[events]", error instanceof Error ? error.message : "API unavailable"); }
+const upcoming = events.filter(event => !isPast(event));
+const past = events.filter(isPast).reverse();
+---
+<BaseLayout title="Événements — Le Coven" description="Concerts, soirées, festivals et rencontres : retrouvez l’agenda du Coven et de ses collectifs.">
+  <header class="events-hero">
+    <span class="events-hero__star" aria-hidden="true"></span>
+    <p>Agenda</p>
+    <h1>Événements</h1>
+  </header>
+  <div class="events-content">
+    <section aria-labelledby="upcoming-title">
+      <div class="events-heading"><div><p class="event-eyebrow">On se retrouve bientôt</p><h2 id="upcoming-title">Les prochains rendez-vous</h2></div>{past.length > 0 && <a class="event-link" href="#archives">Voir les événements passés ↓</a>}</div>
+      {unavailable ? <div class="events-empty"><h3>L’agenda est momentanément indisponible</h3><p>Merci de revenir un peu plus tard pour découvrir nos prochains rendez-vous.</p><a class="event-link" href="/contact">Nous contacter ↗</a></div> : upcoming.length ? <div class="events-grid">{upcoming.map(event => <EventCard event={event} />)}</div> : <div class="events-empty"><span aria-hidden="true">✦</span><h3>La suite s’écrit ensemble.</h3><p>De nouveaux rendez-vous arrivent. Revenez bientôt découvrir la programmation.</p></div>}
+    </section>
+    {past.length > 0 && <section id="archives" aria-labelledby="past-title"><div class="events-heading"><div><p class="event-eyebrow">Les nuits qu’on garde en mémoire</p><h2 id="past-title">Événements passés</h2></div></div><div class="events-grid">{past.map(event => <EventCard event={event} />)}</div></section>}
+  </div>
+</BaseLayout>

@@ -94,7 +94,6 @@ const sections: ContentSection[] = [];
 let currentSection: ContentSection | undefined;
 
 for (const block of page.content ?? []) {
-for (const block of page.content ?? []) {
   const text = blockText(block);
   if (!text) continue;
   if (block.type === "heading" && block.level === 2) {

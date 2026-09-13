@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getEvents, category, dateLabel, location, mediaUrl, safeUrl, isPast, type EventEntry } from "../../lib/events";
+import "../../styles/events.css";
+export async function getStaticPaths() {
+  // Fail the build on API errors rather than silently removing published detail pages.
+  return (await getEvents()).map(event => ({ params: { slug: event.slug }, props: { event } }));
+}
+interface Props { event: EventEntry; }
+const { event } = Astro.props;
+const ticket = safeUrl(event.lienBilletterie) || safeUrl(event.lienShotgun) || safeUrl(event.lienHelloAsso);
+const online = safeUrl(event.lienEnLigne);
+const facebook = safeUrl(event.lienFacebook);
+const map = safeUrl(event.lieu?.lienCarte);
+const past = isPast(event);
+---
+<BaseLayout title={`${event.titre} — Le Coven`} description={event.descriptionCourte}>
+  <div class="event-detail events-content">
+    <a class="event-link" href="/events">← Tous les événements</a>
+    <header class="event-detail__header"><p class="event-eyebrow">{category(event)} · {dateLabel(event.dateDebut)}</p><h1>{event.titre}</h1><p>{event.descriptionCourte}</p>{(event.annule || event.complet || past) && <span class="event-status">{event.annule ? "Événement annulé" : past ? "Événement passé" : "Complet"}</span>}</header>
+    <img class="event-detail__cover" src={mediaUrl(event.imageCouverture) || "/images/hero-concert.jfif"} alt={event.imageCouverture?.alternativeText || event.titre} />
+    <div class="event-detail__columns">
+      <section class="event-description"><p class="event-eyebrow">Le rendez-vous</p><h2>À propos</h2>{(event.description || event.descriptionCourte).split(/\n\s*\n/).map(paragraph => <p class="event-paragraph">{paragraph}</p>)}
+      {event.galerie?.some(image => mediaUrl(image)) && <div class="event-gallery">{event.galerie.filter(image => mediaUrl(image)).map(image => <img src={mediaUrl(image)} alt={image.alternativeText || ""} loading="lazy" />)}</div>}
+      </section>
+      <aside class="event-info" aria-label="Informations pratiques"><h2>Informations pratiques</h2><dl>
+        <dt>Quand</dt><dd>{dateLabel(event.dateDebut, true)}{event.dateFin && <><br />Jusqu’au {dateLabel(event.dateFin, true)}</>}</dd>
+        {event.ouvertureDesPortes && <><dt>Ouverture des portes</dt><dd>{dateLabel(event.ouvertureDesPortes, true)}</dd></>}
+        <dt>Où</dt><dd>{location(event)}{!event.evenementEnLigne && event.lieu?.adresse && <><br />{event.lieu.adresse} {event.lieu.codePostal}</>}</dd>
+        <dt>Tarif</dt><dd>{event.entreeGratuite ? "Entrée gratuite" : event.informationsTarifaires || "Voir la billetterie pour les tarifs"}</dd>
+        {event.ageMinimum != null && <><dt>Âge minimum</dt><dd>{event.ageMinimum} ans</dd></>}
+      </dl>
+      {!event.annule && !past && !event.complet && ticket && <a class="c-button c-button--primary c-button--md" href={ticket} target="_blank" rel="noopener noreferrer">Réserver ma place ↗</a>}
+      {!event.annule && !past && event.evenementEnLigne && online && <a class="event-link" href={online} target="_blank" rel="noopener noreferrer">Rejoindre en ligne ↗</a>}
+      {map && <a class="event-link" href={map} target="_blank" rel="noopener noreferrer">Voir l’itinéraire ↗</a>}
+      {facebook && <a class="event-link" href={facebook} target="_blank" rel="noopener noreferrer">L’événement sur Facebook ↗</a>}
+      </aside>
+    </div>
+  </div>
+</BaseLayout>
