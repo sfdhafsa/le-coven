@@ -1,42 +1,85 @@
 ---
 import "../styles/global.css";
-const covenUrl = (import.meta.env.PUBLIC_COVEN_URL ?? "http://localhost:4321").replace(/\/$/, "");
+const covenUrl = (import.meta.env.PUBLIC_COVEN_URL || "http://localhost:4321").replace(/\/$/, "");
 const ticketUrl = import.meta.env.PUBLIC_TICKETING_URL;
+const volunteerUrl = import.meta.env.PUBLIC_VOLUNTEER_URL;
+const links = [
+  { label: "Accueil", href: "#accueil" },
+  { label: "Infos pratiques", href: "#infos-pratiques" },
+  { label: "Billetterie", href: ticketUrl || "#billetterie" },
+  { label: "Bénévolat", href: volunteerUrl || "#benevolat" },
+  { label: "Contact", href: "#contact" },
+];
 ---
 <!doctype html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Le site du festival Blue Moon : retrouvez prochainement la programmation et les informations de la prochaine édition." />
-    <title>Blue Moon — Le festival</title>
+    <meta name="theme-color" content="#050410" />
+    <meta name="description" content="Blue Moon, le festival produit par Le Coven. Retrouvez les informations pratiques, la billetterie et les façons de rejoindre l’aventure." />
+    <link rel="icon" href="/images/logo-le-coven.jpeg" />
+    <title>Blue Moon — Festival · Le Coven</title>
   </head>
   <body>
+    <a class="skip-link" href="#main">Aller au contenu</a>
     <header class="site-header">
-      <nav class="shell site-nav" aria-label="Navigation principale">
-        <a class="site-brand" href="/" aria-current="page">Blue Moon</a>
-        <a href={covenUrl + "/blue-moon"}>Le festival et Le Coven ↗</a>
+      <nav class="site-nav" aria-label="Navigation principale">
+        <a class="brand" href="#accueil" aria-label="Blue Moon, accueil">
+          <img src="/images/logo-le-coven.jpeg" alt="" width="42" height="42" />
+          <span><strong>Blue Moon</strong><small>Festival 2025</small></span>
+        </a>
+        <ul class="desktop-nav">{links.map((link, i) => <li><a href={link.href} class:list={["nav-link", i === 0 && "is-active"]} aria-current={i === 0 ? "page" : undefined}>{link.label}</a></li>)}</ul>
+        <div class="header-actions">
+          <a class="button button-primary header-ticket" href={ticketUrl || "#billetterie"}>Billetterie <span aria-hidden="true">↗</span></a>
+          <a class="coven-link" href={covenUrl}>← LECOVEN.FR</a>
+          <button class="menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span></button>
+        </div>
+      </nav>
+      <nav id="mobile-nav" aria-label="Navigation mobile" hidden>
+        {links.map(link => <a href={link.href}>{link.label}</a>)}
+        <a href={covenUrl}>← Retour au Coven</a>
       </nav>
     </header>
-    <main>
-      <section class="hero" aria-labelledby="festival-title">
+    <main id="main">
+      <section class="hero" id="accueil" aria-labelledby="festival-title">
         <div class="hero-image" aria-hidden="true"></div>
         <div class="hero-glow" aria-hidden="true"></div>
-        <div class="hero-content shell">
-          <p class="festival-meta">La prochaine lune approche</p>
+        <span class="star star-one" aria-hidden="true"></span><span class="star star-two" aria-hidden="true"></span><span class="star star-three" aria-hidden="true"></span><span class="star star-four" aria-hidden="true"></span>
+        <div class="hero-content">
+          <p class="festival-meta">10 · 11 · 12 mai 2025 <span>— Domaine de la Lune, Flandres</span></p>
           <h1 id="festival-title"><span>Blue</span><span>Moon</span></h1>
-          <p class="festival-label">Festival</p>
-          <p class="festival-announcement">Dates, artistes et programme de la prochaine édition seront annoncés ici prochainement.</p>
+          <p class="festival-label">Festival · Une production Le Coven</p>
           <div class="hero-actions">
-            {ticketUrl && <a class="button button-primary" href={ticketUrl}>Billetterie ↗</a>}
-            <a class="button button-outline" href={covenUrl + "/blue-moon"}>Découvrir le festival avec Le Coven ↗</a>
+            <a class="button button-primary" href="#infos-pratiques">Infos pratiques <span aria-hidden="true">→</span></a>
+            <a class="button button-outline" href={ticketUrl || "#billetterie"}>Billetterie <span aria-hidden="true">→</span></a>
           </div>
         </div>
       </section>
+      <section class="information section-shell" id="infos-pratiques" aria-labelledby="info-title">
+        <div class="section-heading"><p class="eyebrow">Préparer votre venue</p><h2 id="info-title">Sous la même lune.</h2><p>Tout ce qu’il faut pour rejoindre l’aventure Blue Moon.</p></div>
+        <div class="info-grid">
+          <article><span class="card-number">01 / LE LIEU</span><h3>Se retrouver</h3><p>Domaine de la Lune, Flandres.</p><p>Les détails d’accès et de transport seront précisés ici.</p></article>
+          <article id="billetterie"><span class="card-number">02 / BILLETTERIE</span><h3>Votre place dans la fête.</h3>{ticketUrl ? <a class="text-link" href={ticketUrl}>Accéder à la billetterie ↗</a> : <p>Les informations de billetterie seront annoncées prochainement.</p>}</article>
+          <article id="benevolat"><span class="card-number">03 / BÉNÉVOLAT</span><h3>Faire partie de l’aventure.</h3><p>Envie de contribuer au festival et de rejoindre l’équipe ?</p><a class="text-link" href={volunteerUrl || covenUrl + "/contact"}>Rejoindre l’aventure ↗</a></article>
+        </div>
+      </section>
+      <section class="contact-section section-shell" id="contact"><div><p class="eyebrow">Restons en contact</p><h2>On se parle ?</h2></div><a class="button button-outline" href={covenUrl + "/contact"}>Contacter Le Coven <span aria-hidden="true">↗</span></a></section>
     </main>
+    <footer class="section-shell"><span>Blue Moon · Une production Le Coven</span><a href={covenUrl + "/mentions-legales"}>Mentions légales ↗</a></footer>
+    <button class="help-toggle" aria-label="Aide et contact" aria-haspopup="dialog">?</button>
+    <dialog class="help-dialog" aria-labelledby="help-title"><form method="dialog"><button class="help-close" aria-label="Fermer l’aide">×</button></form><p class="eyebrow">Blue Moon vous accompagne</p><h2 id="help-title">Une question ?</h2><p>Consultez les informations pratiques ou contactez l’équipe du Coven pour préparer votre venue.</p><a class="button button-primary" href={covenUrl + "/contact"}>Contacter l’équipe ↗</a></dialog>
+    <script>
+      const menuButton = document.querySelector<HTMLButtonElement>(".menu-toggle");
+      const menu = document.querySelector<HTMLElement>("#mobile-nav");
+      const closeMenu = () => { if (!menu || !menuButton) return; menu.hidden = true; menuButton.setAttribute("aria-expanded", "false"); menuButton.setAttribute("aria-label", "Ouvrir le menu"); };
+      menuButton?.addEventListener("click", () => { if (!menu) return; const open = menu.hidden; menu.hidden = !open; menuButton.setAttribute("aria-expanded", String(open)); menuButton.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu"); });
+      menu?.querySelectorAll("a").forEach(link => link.addEventListener("click", closeMenu));
+      document.addEventListener("keydown", event => { if (event.key === "Escape") closeMenu(); });
+      matchMedia("(min-width: 1200px)").addEventListener("change", event => { if (event.matches) closeMenu(); });
+      const help = document.querySelector<HTMLDialogElement>(".help-dialog");
+      document.querySelector(".help-toggle")?.addEventListener("click", () => help?.showModal());
+      help?.addEventListener("click", event => { if (event.target === help) { const r = help.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) help.close(); } });
+    </script>
   </body>
 </html>
-<style>
-  .festival-announcement { max-width: 38rem; margin: 2rem 0 0; color: #ddcbed; line-height: 1.7; }
-  .site-nav > a:last-child { font-size: .85rem; text-align: right; }
-</style>
