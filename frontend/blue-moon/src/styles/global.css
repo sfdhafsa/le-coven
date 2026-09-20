@@ -17,3 +17,15 @@
 .hero-content,.contact-section > *,footer > *{min-width:0}
 .section-heading,h2,h3,.info-grid p,.text-link{overflow-wrap:anywhere}
 @media(min-width:700px) and (max-width:1199px){.info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.info-grid article:last-child{grid-column:1/-1}}
+
+/* The festival story is editorial content, independent of each edition. */
+.festival-story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 80px); padding-block: clamp(56px, 8vw, 112px); border-bottom: 1px solid #123340; }
+.story-heading h2 { margin-bottom: 0; }
+.story-heading h2 span { color: #35e5e9; }
+.story-copy { min-width: 0; }
+.story-copy p { margin: 0 0 20px; color: #a6b9c6; line-height: 1.85; }
+.story-copy .story-intro { color: #e7fcff; font-size: clamp(20px, 2vw, 26px); line-height: 1.5; }
+.story-sources { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-top: 28px; }
+.story-sources a { color: #49c9d2; font-size: 12px; line-height: 1.6; text-underline-offset: 4px; }
+.story-sources a:hover { text-decoration: underline; }
+@media (max-width: 767px) { .festival-story { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
