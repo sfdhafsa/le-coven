@@ -37,12 +37,10 @@
       "type": "blocks"
     },
     "dateDebut": {
-      "type": "date",
-      "required": true
+      "type": "date"
     },
     "dateFin": {
-      "type": "date",
-      "required": true
+      "type": "date"
     },
     "imageCouverture": {
       "type": "media",

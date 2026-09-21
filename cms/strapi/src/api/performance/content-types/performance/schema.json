@@ -16,8 +16,7 @@
       "required": true
     },
     "dateHeureDebut": {
-      "type": "datetime",
-      "required": true
+      "type": "datetime"
     },
     "dateHeureFin": {
       "type": "datetime"

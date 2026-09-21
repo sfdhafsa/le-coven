@@ -691,8 +691,8 @@ export interface ApiFestivalEditionFestivalEdition
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    dateDebut: Schema.Attribute.Date & Schema.Attribute.Required;
-    dateFin: Schema.Attribute.Date & Schema.Attribute.Required;
+    dateDebut: Schema.Attribute.Date;
+    dateFin: Schema.Attribute.Date;
     description: Schema.Attribute.Blocks;
     descriptionCourte: Schema.Attribute.Text & Schema.Attribute.Required;
     editionActuelle: Schema.Attribute.Boolean &
@@ -880,7 +880,7 @@ export interface ApiPerformancePerformance extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    dateHeureDebut: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    dateHeureDebut: Schema.Attribute.DateTime;
     dateHeureFin: Schema.Attribute.DateTime;
     description: Schema.Attribute.Blocks;
     editionFestival: Schema.Attribute.Relation<
