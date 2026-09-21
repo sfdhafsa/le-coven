@@ -48,29 +48,29 @@ function paragraph(value?: string) {
 function date(value: string) {
   return new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeZone: "Europe/Paris" }).format(new Date(`${value}T12:00:00Z`));
 }
+function editionDates(start?: string, end?: string) {
+  if (start && end) return start === end ? date(start) : `${date(start)} – ${date(end)}`;
+  if (start) return `À partir du ${date(start)}`;
+  if (end) return `Jusqu’au ${date(end)}`;
+  return undefined;
+}
 async function loadEdition() {
   const edition = await getNextEdition();
-  if (!edition) {
-    text("homepage-status", "La prochaine édition sera annoncée prochainement.");
-    return;
-  }
-  const heading = element("festival-title");
-  heading.replaceChildren(...edition.nom.split(/\s+/).map(word => {
-    const span = document.createElement("span"); span.textContent = word; return span;
-  }));
-  heading.hidden = false;
-  text("edition-year", String(edition.annee));
+  if (!edition) return;
   const venues = edition.lieux || [];
-  text("edition-meta", [edition.dateDebut === edition.dateFin ? date(edition.dateDebut) : `${date(edition.dateDebut)} – ${date(edition.dateFin)}`, ...venues.map(venue => [venue.nom, venue.ville].filter(Boolean).join(", "))].join(" · "));
+  const editionMeta = [editionDates(edition.dateDebut, edition.dateFin), ...venues.map(venue => [venue.nom, venue.ville].filter(Boolean).join(", "))].filter(Boolean).join(" · ");
+  text("edition-meta", editionMeta);
   text("edition-description", edition.descriptionCourte);
+  text("next-edition-name", edition.nom);
+  text("next-edition-meta", editionMeta);
+  text("next-edition-description", edition.descriptionCourte);
+  element("prochaine-edition").hidden = false;
   const cover = mediaUrl(edition.imageCouverture);
   const hero = document.querySelector<HTMLElement>(".hero-image")!;
   hero.replaceChildren();
   if (cover) { const image = document.createElement("img"); image.src = cover; image.alt = ""; hero.append(image); }
   element("billetterie").hidden = !link("ticket-link", edition.lienBilletterie);
   element("benevolat").hidden = !link("volunteer-link", edition.lienBenevolat);
-  document.querySelectorAll<HTMLAnchorElement>('a[href="#billetterie"]').forEach(anchor => { anchor.hidden = !safeUrl(edition.lienBilletterie); });
-  document.querySelectorAll<HTMLAnchorElement>('a[href="#benevolat"]').forEach(anchor => { anchor.hidden = !safeUrl(edition.lienBenevolat); });
   element("venue-grid").replaceChildren(...venues.map(venue => {
     const card = document.createElement("article");
     const heading = document.createElement("h3"); heading.textContent = venue.nom;
@@ -80,7 +80,6 @@ async function loadEdition() {
     if (href) { const anchor = document.createElement("a"); anchor.href = href; anchor.className = "text-link"; anchor.textContent = "Voir sur la carte ↗"; card.append(anchor); }
     return card;
   }));
-  text("homepage-status");
   try {
     const information = await getPracticalInformation(edition.documentId);
     element("practical-grid").replaceChildren(...information.map(info => {
@@ -102,43 +101,22 @@ async function loadEdition() {
 async function loadSettings() {
   const settings = await getSettings();
   if (!settings) throw new Error("Publish the Blue Moon Site Settings entry in Strapi.");
-  document.querySelectorAll("[data-site-name]").forEach(node => { node.textContent = settings.nomSite; });
   document.title = settings.titreSeoParDefaut || settings.nomSite;
   document.querySelector('meta[name="description"]')?.setAttribute("content", settings.descriptionSeoParDefaut || settings.descriptionSite || "");
-  const logo = mediaUrl(settings.logo);
-  const logoElement = element("site-logo") as HTMLImageElement;
-  logoElement.hidden = !logo;
-  if (logo) logoElement.src = logo;
   const favicon = mediaUrl(settings.favicon);
   if (favicon) {
     const icon = document.querySelector<HTMLLinkElement>('link[rel="icon"]') || document.createElement("link");
     icon.rel = "icon"; icon.href = favicon; document.head.append(icon);
   }
-  text("festival-signature", settings.signatureFestival);
-  text("footer-copy", settings.textePiedDePage);
-  text("origin-title", settings.titreOrigine);
-  element("origin-copy").replaceChildren(blocks(settings.origineHistoire));
-  element("origine").hidden = !(settings.titreOrigine && settings.origineHistoire?.length);
-  const covenUrl = safeUrl(settings.lienSiteCoven);
-  document.querySelectorAll<HTMLAnchorElement>("[data-coven-link]").forEach(anchor => {
-    anchor.hidden = !covenUrl;
-    if (covenUrl) anchor.href = covenUrl;
-  });
-  link("legal-link", covenUrl ? new URL("/mentions-legales", covenUrl).href : undefined);
   element("contact").hidden = !settings.emailGeneral;
   document.querySelectorAll<HTMLAnchorElement>('a[href="#contact"]').forEach(anchor => { anchor.hidden = !settings.emailGeneral; });
   if (settings.emailGeneral) (element("contact-link") as HTMLAnchorElement).href = `mailto:${encodeURIComponent(settings.emailGeneral)}`;
 }
 async function loadHomepage() {
-  element("homepage-retry").hidden = true;
-  text("homepage-status", "Chargement du festival…");
   const results = await Promise.allSettled([loadEdition(), loadSettings()]);
   const errors = results.filter(result => result.status === "rejected");
   if (errors.length) {
     console.error("Homepage Strapi content:", errors);
-    text("homepage-status", "Certaines informations du festival sont momentanément indisponibles.");
-    element("homepage-retry").hidden = false;
   }
 }
-element("homepage-retry").addEventListener("click", loadHomepage);
 void loadHomepage();

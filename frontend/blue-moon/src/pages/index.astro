@@ -1,11 +1,14 @@
 ---
 import "../styles/global.css";
 import ArtistLineup from "../components/ArtistLineup.astro";
+const covenUrl = (import.meta.env.PUBLIC_COVEN_URL || "http://localhost:4321").replace(/\/$/, "");
+const ticketUrl = import.meta.env.PUBLIC_TICKETING_URL;
+const volunteerUrl = import.meta.env.PUBLIC_VOLUNTEER_URL;
 const links = [
   { label: "Accueil", href: "#accueil" },
   { label: "Infos pratiques", href: "#infos-pratiques" },
-  { label: "Billetterie", href: "#billetterie" },
-  { label: "Bénévolat", href: "#benevolat" },
+  { label: "Billetterie", href: ticketUrl || "#billetterie" },
+  { label: "Bénévolat", href: volunteerUrl || "#benevolat" },
   { label: "Contact", href: "#contact" },
 ];
 ---
@@ -22,20 +25,20 @@ const links = [
     <a class="skip-link" href="#main">Aller au contenu</a>
     <header class="site-header">
       <nav class="site-nav" aria-label="Navigation principale">
-        <a class="brand" href="#accueil" aria-label="Accueil">
-          <img id="site-logo" alt="" width="42" height="42" hidden />
-          <span><strong data-site-name></strong><small id="edition-year"></small></span>
+        <a class="brand" href="#accueil" aria-label="Blue Moon, accueil">
+          <img src="/images/logo-le-coven.jpeg" alt="" width="42" height="42" />
+          <span><strong>Blue Moon</strong><small>Festival</small></span>
         </a>
-        <ul class="desktop-nav">{links.map((link, i) => <li><a href={link.href} hidden={["#billetterie", "#benevolat", "#contact"].includes(link.href)} class:list={["nav-link", i === 0 && "is-active"]} aria-current={i === 0 ? "page" : undefined}>{link.label}</a></li>)}</ul>
+        <ul class="desktop-nav">{links.map((link, i) => <li><a href={link.href} class:list={["nav-link", i === 0 && "is-active"]} aria-current={i === 0 ? "page" : undefined}>{link.label}</a></li>)}</ul>
         <div class="header-actions">
-          <a class="button button-primary header-ticket" href="#billetterie" hidden>Billetterie <span aria-hidden="true">↗</span></a>
-          <a class="coven-link" data-coven-link hidden>← Le Coven</a>
+          <a class="button button-primary header-ticket" href={ticketUrl || "#billetterie"}>Billetterie <span aria-hidden="true">↗</span></a>
+          <a class="coven-link" href={covenUrl}>← LECOVEN.FR</a>
           <button class="menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span></button>
         </div>
       </nav>
       <nav id="mobile-nav" aria-label="Navigation mobile" hidden>
-        {links.map(link => <a href={link.href} hidden={["#billetterie", "#benevolat", "#contact"].includes(link.href)}>{link.label}</a>)}
-        <a data-coven-link hidden>← Retour au Coven</a>
+        {links.map(link => <a href={link.href}>{link.label}</a>)}
+        <a href={covenUrl}>← Retour au Coven</a>
       </nav>
     </header>
     <main id="main">
@@ -45,17 +48,27 @@ const links = [
         <span class="star star-one" aria-hidden="true"></span><span class="star star-two" aria-hidden="true"></span><span class="star star-three" aria-hidden="true"></span><span class="star star-four" aria-hidden="true"></span>
         <div class="hero-content">
           <p class="festival-meta" id="edition-meta" hidden></p>
-          <h1 id="festival-title" hidden></h1>
-          <p class="festival-label" id="festival-signature" hidden></p>
+          <h1 id="festival-title"><span>Blue</span><span>Moon</span></h1>
+          <p class="festival-label">Festival · Une production Le Coven</p>
           <p id="edition-description" class="cms-description" hidden></p>
-          <p id="homepage-status" role="status">Chargement du festival…</p>
-          <button id="homepage-retry" class="button button-outline" hidden>Réessayer</button>
           <div class="hero-actions">
             <a class="button button-primary" href="#infos-pratiques">Infos pratiques <span aria-hidden="true">→</span></a>
-            <a class="button button-outline" href="#billetterie" hidden>Billetterie <span aria-hidden="true">→</span></a>
+            <a class="button button-outline" href={ticketUrl || "#billetterie"}>Billetterie <span aria-hidden="true">→</span></a>
           </div>
         </div>
       </section>
+      <section class="next-edition section-shell" id="prochaine-edition" aria-labelledby="next-edition-title" hidden>
+        <div class="section-heading">
+          <p class="eyebrow">Le prochain rendez-vous</p>
+          <h2 id="next-edition-title">Prochaine édition</h2>
+        </div>
+        <div class="next-edition-card">
+          <h3 id="next-edition-name"></h3>
+          <p class="next-edition-meta" id="next-edition-meta"></p>
+          <p class="next-edition-description" id="next-edition-description" hidden></p>
+        </div>
+      </section>
+      <ArtistLineup />
       <section class="festival-story section-shell" id="origine" aria-labelledby="origin-title">
         <div class="story-heading">
           <p class="eyebrow">L’esprit du festival</p>
@@ -83,7 +96,7 @@ const links = [
       </section>
       <section class="contact-section section-shell" id="contact" hidden><h2>Contact</h2><a id="contact-link" class="button button-outline">Nous contacter ↗</a></section>
     </main>
-    <footer class="section-shell"><span id="footer-copy"></span><a id="legal-link" hidden>Mentions légales ↗</a></footer>
+    <footer class="section-shell"><span>Blue Moon · Une production Le Coven</span><a href={covenUrl + "/mentions-legales"}>Mentions légales ↗</a></footer>
     <noscript><p class="section-shell">Activez JavaScript pour charger les informations du festival.</p></noscript>
     <script>
       import "../lib/homepage";

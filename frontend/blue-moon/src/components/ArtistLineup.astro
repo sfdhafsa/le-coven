@@ -1,26 +1,18 @@
-<section class="lineup section-shell" id="artistes" aria-labelledby="lineup-title">
+<section class="lineup section-shell" id="artistes" aria-labelledby="lineup-title" hidden>
   <div class="section-heading">
-    <p class="eyebrow">La prochaine édition</p>
-    <h2 id="lineup-title">Artistes</h2>
+    <p class="eyebrow">La programmation</p>
+    <h2 id="lineup-title">Artistes à l’affiche</h2>
   </div>
-  <p id="lineup-status" class="lineup-status" role="status">Chargement des artistes…</p>
-  <ul id="lineup-grid" class="lineup-grid" aria-label="Artistes du festival" hidden></ul>
-  <button id="lineup-retry" class="button button-outline" type="button" hidden>Réessayer</button>
-  <noscript><p>Activez JavaScript pour découvrir les artistes du festival.</p></noscript>
+  <ul id="lineup-grid" class="lineup-grid" aria-label="Artistes du festival"></ul>
 </section>
 
 <script>
   import { getLineup } from "../lib/lineup";
 
+  const section = document.querySelector<HTMLElement>("#artistes")!;
   const grid = document.querySelector<HTMLUListElement>("#lineup-grid")!;
-  const status = document.querySelector<HTMLParagraphElement>("#lineup-status")!;
-  const retry = document.querySelector<HTMLButtonElement>("#lineup-retry")!;
 
   async function load() {
-    retry.hidden = true;
-    status.hidden = false;
-    status.textContent = "Chargement des artistes…";
-    grid.setAttribute("aria-busy", "true");
     try {
       const artists = await getLineup();
       const cards = artists.map(artist => {
@@ -58,17 +50,11 @@
         return card;
       });
       grid.replaceChildren(...cards);
-      grid.hidden = !cards.length;
-      status.hidden = !!cards.length;
-      status.textContent = cards.length ? "" : "La programmation sera dévoilée prochainement.";
+      section.hidden = !cards.length;
     } catch (error) {
       console.error("Blue Moon: impossible de charger les artistes.", error);
-      status.textContent = "La programmation est momentanément indisponible. Réessayez dans quelques instants.";
-      retry.hidden = false;
-    } finally {
-      grid.setAttribute("aria-busy", "false");
+      section.hidden = true;
     }
   }
-  retry.addEventListener("click", load);
   void load();
 </script>
