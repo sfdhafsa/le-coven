@@ -22,12 +22,16 @@
     "logo": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "favicon": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "textePiedDePage": {
       "type": "text"
@@ -80,7 +84,9 @@
     "imagePartageParDefaut": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "nomLegal": {
       "type": "string"
@@ -96,6 +102,19 @@
     },
     "representantLegal": {
       "type": "string"
+    },
+    "titreOrigine": {
+      "type": "string"
+    },
+    "origineHistoire": {
+      "type": "blocks"
+    },
+    "signatureFestival": {
+      "type": "string"
+    },
+    "lienSiteCoven": {
+      "type": "string",
+      "regex": "^https?:\\/\\/.+"
     }
   }
 }
