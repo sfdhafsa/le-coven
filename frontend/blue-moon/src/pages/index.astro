@@ -2,14 +2,11 @@
 import "../styles/global.css";
 import ArtistLineup from "../components/ArtistLineup.astro";
 const covenUrl = (import.meta.env.PUBLIC_COVEN_URL || "http://localhost:4321").replace(/\/$/, "");
-const ticketUrl = import.meta.env.PUBLIC_TICKETING_URL;
-const volunteerUrl = import.meta.env.PUBLIC_VOLUNTEER_URL;
+const ticketUrl = "/billetterie";
 const links = [
   { label: "Accueil", href: "#accueil" },
-  { label: "Infos pratiques", href: "#infos-pratiques" },
-  { label: "Billetterie", href: ticketUrl || "#billetterie" },
-  { label: "Bénévolat", href: volunteerUrl || "#benevolat" },
-  { label: "Contact", href: "#contact" },
+  { label: "Infos pratiques", href: "/infos-pratiques" },
+  { label: "Billetterie", href: ticketUrl },
 ];
 ---
 <!doctype html>
@@ -31,7 +28,7 @@ const links = [
         </a>
         <ul class="desktop-nav">{links.map((link, i) => <li><a href={link.href} class:list={["nav-link", i === 0 && "is-active"]} aria-current={i === 0 ? "page" : undefined}>{link.label}</a></li>)}</ul>
         <div class="header-actions">
-          <a class="button button-primary header-ticket" href={ticketUrl || "#billetterie"}>Billetterie <span aria-hidden="true">↗</span></a>
+          <a class="button button-primary header-ticket" href={ticketUrl}>Billetterie <span aria-hidden="true">↗</span></a>
           <a class="coven-link" href={covenUrl}>← LECOVEN.FR</a>
           <button class="menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span></button>
         </div>
@@ -51,10 +48,6 @@ const links = [
           <h1 id="festival-title"><span>Blue</span><span>Moon</span></h1>
           <p class="festival-label">Festival · Une production Le Coven</p>
           <p id="edition-description" class="cms-description" hidden></p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#infos-pratiques">Infos pratiques <span aria-hidden="true">→</span></a>
-            <a class="button button-outline" href={ticketUrl || "#billetterie"}>Billetterie <span aria-hidden="true">→</span></a>
-          </div>
         </div>
       </section>
       <section class="next-edition section-shell" id="prochaine-edition" aria-labelledby="next-edition-title" hidden>
@@ -82,16 +75,6 @@ const links = [
             <a href="https://shotgun.live/en/festivals/blue-moon" target="_blank" rel="noopener noreferrer">Le festival sur Shotgun ↗</a>
             <a href="https://science.nasa.gov/solar-system/moon/super-blue-moons-your-questions-answered/" target="_blank" rel="noopener noreferrer">Comprendre la lune bleue · NASA ↗</a>
           </div>
-        </div>
-      </section>
-      <section class="information section-shell" id="infos-pratiques" aria-labelledby="info-title">
-        <div class="section-heading"><h2 id="info-title">Informations pratiques</h2></div>
-        <div class="info-grid" id="venue-grid"></div>
-        <div class="info-grid" id="practical-grid"></div>
-        <p id="practical-status" role="status"></p>
-        <div class="info-grid">
-          <article id="billetterie" hidden><h3>Billetterie</h3><a id="ticket-link" class="text-link">Accéder à la billetterie ↗</a></article>
-          <article id="benevolat" hidden><h3>Bénévolat</h3><a id="volunteer-link" class="text-link">Rejoindre l’aventure ↗</a></article>
         </div>
       </section>
       <section class="contact-section section-shell" id="contact" hidden><h2>Contact</h2><a id="contact-link" class="button button-outline">Nous contacter ↗</a></section>
