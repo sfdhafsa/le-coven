@@ -53,7 +53,6 @@ export async function loadPracticalInformationPage() {
   if (!edition) return;
 
   const venues = edition.lieux || [];
-  element("billetterie").hidden = !link("ticket-link", edition.lienBilletterie);
   element("benevolat").hidden = !link("volunteer-link", edition.lienBenevolat);
   element("venue-grid").replaceChildren(...venues.map(venue => {
     const card = document.createElement("article");
