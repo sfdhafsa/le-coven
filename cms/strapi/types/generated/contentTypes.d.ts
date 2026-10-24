@@ -691,8 +691,8 @@ export interface ApiFestivalEditionFestivalEdition
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    dateDebut: Schema.Attribute.Date & Schema.Attribute.Required;
-    dateFin: Schema.Attribute.Date & Schema.Attribute.Required;
+    dateDebut: Schema.Attribute.Date;
+    dateFin: Schema.Attribute.Date;
     description: Schema.Attribute.Blocks;
     descriptionCourte: Schema.Attribute.Text & Schema.Attribute.Required;
     editionActuelle: Schema.Attribute.Boolean &
@@ -880,7 +880,7 @@ export interface ApiPerformancePerformance extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    dateHeureDebut: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    dateHeureDebut: Schema.Attribute.DateTime;
     dateHeureFin: Schema.Attribute.DateTime;
     description: Schema.Attribute.Blocks;
     editionFestival: Schema.Attribute.Relation<
@@ -975,6 +975,7 @@ export interface ApiSiteSettingSiteSetting extends Struct.CollectionTypeSchema {
     lienHelloAsso: Schema.Attribute.String;
     lienInstagram: Schema.Attribute.String;
     lienLinktree: Schema.Attribute.String;
+    lienSiteCoven: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -990,10 +991,13 @@ export interface ApiSiteSettingSiteSetting extends Struct.CollectionTypeSchema {
       Schema.Attribute.Unique;
     numeroRNA: Schema.Attribute.String;
     numeroSIRET: Schema.Attribute.String;
+    origineHistoire: Schema.Attribute.Blocks;
     publishedAt: Schema.Attribute.DateTime;
     representantLegal: Schema.Attribute.String;
+    signatureFestival: Schema.Attribute.String;
     textePiedDePage: Schema.Attribute.Text;
     titreNewsletter: Schema.Attribute.String;
+    titreOrigine: Schema.Attribute.String;
     titreSeoParDefaut: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

@@ -1,0 +1,60 @@
+<section class="lineup section-shell" id="artistes" aria-labelledby="lineup-title" hidden>
+  <div class="section-heading">
+    <p class="eyebrow">La programmation</p>
+    <h2 id="lineup-title">Artistes à l’affiche</h2>
+  </div>
+  <ul id="lineup-grid" class="lineup-grid" aria-label="Artistes du festival"></ul>
+</section>
+
+<script>
+  import { getLineup } from "../lib/lineup";
+
+  const section = document.querySelector<HTMLElement>("#artistes")!;
+  const grid = document.querySelector<HTMLUListElement>("#lineup-grid")!;
+
+  async function load() {
+    try {
+      const artists = await getLineup();
+      const cards = artists.map(artist => {
+        const card = document.createElement("li");
+        card.className = "artist-card";
+        const portrait = document.createElement("div");
+        portrait.className = "artist-portrait";
+        const monogram = document.createElement("span");
+        monogram.textContent = artist.nom.slice(0, 1);
+        monogram.setAttribute("aria-hidden", "true");
+        portrait.append(monogram);
+        if (artist.imageUrl) {
+          const image = document.createElement("img");
+          image.src = artist.imageUrl;
+          image.alt = "";
+          image.loading = "lazy";
+          image.width = 600;
+          image.height = 600;
+          image.addEventListener("error", () => image.remove(), { once: true });
+          portrait.append(image);
+        }
+        const copy = document.createElement("div");
+        copy.className = "artist-copy";
+        const title = document.createElement("h3");
+        title.textContent = artist.nom;
+        copy.append(title);
+        for (const [className, text] of [["artist-genres", artist.genres], ["artist-bio", artist.biographieCourte]]) {
+          if (!text) continue;
+          const paragraph = document.createElement("p");
+          paragraph.className = className;
+          paragraph.textContent = text;
+          copy.append(paragraph);
+        }
+        card.append(portrait, copy);
+        return card;
+      });
+      grid.replaceChildren(...cards);
+      section.hidden = !cards.length;
+    } catch (error) {
+      console.error("Blue Moon: impossible de charger les artistes.", error);
+      section.hidden = true;
+    }
+  }
+  void load();
+</script>

@@ -37,28 +37,32 @@
       "type": "blocks"
     },
     "dateDebut": {
-      "type": "date",
-      "required": true
+      "type": "date"
     },
     "dateFin": {
-      "type": "date",
-      "required": true
+      "type": "date"
     },
     "imageCouverture": {
       "type": "media",
       "multiple": false,
       "required": true,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "affiche": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "galerie": {
       "type": "media",
       "multiple": true,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "theme": {
       "type": "string"
