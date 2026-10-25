@@ -3,6 +3,7 @@ import { collection, getNextEdition, mediaUrl } from "./strapi";
 interface Artist {
   documentId: string;
   nom: string;
+  slug: string;
   genres?: string;
   biographieCourte?: string;
   imageProfil?: { url: string; mime?: string };
@@ -23,8 +24,7 @@ export async function getLineup() {
       "populate[artiste][filters][publishedAt][$notNull]": "true",
       "sort[0]": "miseEnAvant:desc",
       "sort[1]": "ordreAffichage:asc",
-      "sort[2]": "dateHeureDebut:asc",
-      "sort[3]": "id:asc",
+      "sort[2]": "id:asc",
       "pagination[pageSize]": "100",
       "pagination[page]": String(page),
     });

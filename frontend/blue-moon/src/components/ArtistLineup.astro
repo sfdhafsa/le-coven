@@ -18,6 +18,10 @@
       const cards = artists.map(artist => {
         const card = document.createElement("li");
         card.className = "artist-card";
+        const link = document.createElement("a");
+        link.className = "artist-card-link";
+        link.href = `/artistes/${encodeURIComponent(artist.slug)}`;
+        link.setAttribute("aria-label", `Découvrir ${artist.nom}`);
         const portrait = document.createElement("div");
         portrait.className = "artist-portrait";
         const monogram = document.createElement("span");
@@ -46,7 +50,8 @@
           paragraph.textContent = text;
           copy.append(paragraph);
         }
-        card.append(portrait, copy);
+        link.append(portrait, copy);
+        card.append(link);
         return card;
       });
       grid.replaceChildren(...cards);
