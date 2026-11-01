@@ -1,0 +1,124 @@
+---
+import "../styles/global.css";
+
+const covenUrl = (import.meta.env.PUBLIC_COVEN_URL || "http://localhost:4321").replace(/\/$/, "");
+const shotgunUrl = "https://shotgun.live/fr/festivals/blue-moon";
+const helloAssoWidgetUrl = import.meta.env.PUBLIC_HELLOASSO_WIDGET_URL?.trim();
+const links = [
+  { label: "Accueil", href: "/" },
+  { label: "Infos pratiques", href: "/infos-pratiques" },
+  { label: "Billetterie", href: "/billetterie" },
+];
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050410" />
+    <meta name="description" content="Réservez vos billets pour le festival Blue Moon." />
+    <title>Billetterie · Blue Moon</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu</a>
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Navigation principale">
+        <a class="brand" href="/" aria-label="Blue Moon, accueil">
+          <img src="/images/logo-le-coven.jpeg" alt="" width="42" height="42" />
+          <span><strong>Blue Moon</strong><small>Festival</small></span>
+        </a>
+        <ul class="desktop-nav">
+          {links.map(link => (
+            <li>
+              <a
+                href={link.href}
+                class:list={["nav-link", link.href === "/billetterie" && "is-active"]}
+                aria-current={link.href === "/billetterie" ? "page" : undefined}
+              >{link.label}</a>
+            </li>
+          ))}
+        </ul>
+        <div class="header-actions">
+          <a class="button button-primary header-ticket" href="#reserver">Billetterie <span aria-hidden="true">↘</span></a>
+          <a class="coven-link" href={covenUrl}>← LECOVEN.FR</a>
+          <button class="menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span></button>
+        </div>
+      </nav>
+      <nav id="mobile-nav" aria-label="Navigation mobile" hidden>
+        {links.map(link => <a href={link.href} aria-current={link.href === "/billetterie" ? "page" : undefined}>{link.label}</a>)}
+        <a href={covenUrl}>← Retour au Coven</a>
+      </nav>
+    </header>
+
+    <main id="main" class="ticketing-page">
+      <section class="ticketing-intro section-shell" aria-labelledby="ticketing-title">
+        <div class="ticketing-copy">
+          <p class="eyebrow">Blue Moon Festival 2027</p>
+          <h1 id="ticketing-title" class="page-title">Billetterie</h1>
+          <p>Réservez votre place pour deux jours de musique, de création et d’expériences collectives au Phare de Tourcoing.</p>
+        </div>
+        <div class="ticketing-orbit" aria-hidden="true"><span></span></div>
+      </section>
+
+      <section id="reserver" class="ticketing-options section-shell" aria-labelledby="booking-title">
+        <div class="section-heading">
+          <p class="eyebrow">Réserver</p>
+          <h2 id="booking-title">Choisissez votre billetterie</h2>
+        </div>
+        <article class="ticket-provider ticket-provider-shotgun">
+          <div>
+            <p class="ticket-provider-label">Billetterie officielle</p>
+            <h3>Shotgun</h3>
+            <p>Consultez les billets disponibles et finalisez votre réservation sur la plateforme sécurisée Shotgun.</p>
+          </div>
+          <a class="button button-primary" href={shotgunUrl} target="_blank" rel="noopener noreferrer">
+            Prendre mes billets <span aria-hidden="true">↗</span>
+          </a>
+        </article>
+      </section>
+
+      {helloAssoWidgetUrl && (
+        <section class="helloasso-section section-shell" aria-labelledby="helloasso-title">
+          <div class="section-heading">
+            <p class="eyebrow">Autre moyen de réservation</p>
+            <h2 id="helloasso-title">HelloAsso</h2>
+          </div>
+          <iframe
+            class="helloasso-widget"
+            src={helloAssoWidgetUrl}
+            title="Billetterie Blue Moon sur HelloAsso"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </section>
+      )}
+    </main>
+
+    <footer class="section-shell">
+      <span>Blue Moon · Une production Le Coven</span>
+      <a href={covenUrl + "/mentions-legales"}>Mentions légales ↗</a>
+    </footer>
+
+    <script>
+      const menuButton = document.querySelector<HTMLButtonElement>(".menu-toggle");
+      const menu = document.querySelector<HTMLElement>("#mobile-nav");
+      const closeMenu = () => {
+        if (!menu || !menuButton) return;
+        menu.hidden = true;
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "Ouvrir le menu");
+      };
+      menuButton?.addEventListener("click", () => {
+        if (!menu) return;
+        const open = menu.hidden;
+        menu.hidden = !open;
+        menuButton.setAttribute("aria-expanded", String(open));
+        menuButton.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+      });
+      menu?.querySelectorAll("a").forEach(link => link.addEventListener("click", closeMenu));
+      document.addEventListener("keydown", event => { if (event.key === "Escape") closeMenu(); });
+      matchMedia("(min-width: 1200px)").addEventListener("change", event => { if (event.matches) closeMenu(); });
+    </script>
+  </body>
+</html>

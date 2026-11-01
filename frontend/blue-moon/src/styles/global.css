@@ -73,3 +73,23 @@
 .story-sources a { color: #49c9d2; font-size: 12px; line-height: 1.6; text-underline-offset: 4px; }
 .story-sources a:hover { text-decoration: underline; }
 @media (max-width: 767px) { .festival-story { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
+
+.ticketing-page { overflow: hidden; }
+.ticketing-intro { min-height: 500px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); align-items: center; gap: clamp(40px, 8vw, 120px); padding-block: clamp(64px, 9vw, 130px); border-bottom: 1px solid #123340; }
+.ticketing-copy { position: relative; z-index: 1; }
+.ticketing-copy > p:last-child { max-width: 680px; color: #a6b9c6; font-size: clamp(18px, 2vw, 24px); line-height: 1.7; }
+.ticketing-orbit { position: relative; width: min(34vw, 390px); aspect-ratio: 1; justify-self: center; border: 1px solid #075b67; border-radius: 50%; box-shadow: 0 0 80px #00ceda1a, inset 0 0 60px #00ceda12; }
+.ticketing-orbit::before,.ticketing-orbit::after { content: ""; position: absolute; border-radius: 50%; }
+.ticketing-orbit::before { inset: 16%; border: 1px solid #08717b; background: radial-gradient(circle at 35% 30%, #4cffff, #00aaba 24%, #07303d 48%, #050410 73%); box-shadow: 0 0 70px #00d9e555; }
+.ticketing-orbit::after { width: 19%; aspect-ratio: 1; top: 3%; left: 12%; background: #79ffff; box-shadow: 0 0 34px #2efcff; }
+.ticketing-orbit span { position: absolute; inset: 42% -12%; height: 16%; border: 1px solid #0a8590; border-radius: 50%; transform: rotate(-14deg); }
+.ticketing-options { padding-block: clamp(64px, 9vw, 112px); }
+.ticket-provider { display: flex; align-items: center; justify-content: space-between; gap: clamp(32px, 6vw, 90px); padding: clamp(30px, 5vw, 58px); border: 1px solid #12505a; border-radius: 28px; background: radial-gradient(circle at 90% 20%, #0a657044, transparent 38%), linear-gradient(135deg, #071e29, #080917); }
+.ticket-provider > div { max-width: 680px; }
+.ticket-provider h3 { margin: 8px 0 16px; font-size: clamp(36px, 5vw, 66px); }
+.ticket-provider p:not(.ticket-provider-label) { margin: 0; color: #a6b9c6; line-height: 1.8; }
+.ticket-provider-label { margin: 0; color: #35e5e9; font-family: ui-monospace, monospace; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
+.ticket-provider .button { flex: 0 0 auto; }
+.helloasso-section { padding-block: 0 clamp(64px, 9vw, 112px); }
+.helloasso-widget { width: 100%; min-height: 720px; border: 1px solid #12505a; border-radius: 24px; background: white; }
+@media(max-width:799px){.ticketing-intro{grid-template-columns:1fr;min-height:0}.ticketing-orbit{width:min(76vw,320px);grid-row:1}.ticketing-copy{grid-row:2}.ticket-provider{align-items:flex-start;flex-direction:column}.ticket-provider .button{width:100%}}
