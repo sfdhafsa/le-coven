@@ -90,7 +90,6 @@ const biography = (artist.biographie || []).map(blockText).filter(Boolean);
       <a class="artist-back" href="/#artistes">← Retour aux artistes</a>
       <article class="artist-detail-hero">
         <div class="artist-detail-portrait">
-          <span aria-hidden="true">{artist.nom.slice(0, 1)}</span>
           {portrait && <img src={portrait} alt={`Portrait de ${artist.nom}`} width="900" height="1100" />}
         </div>
         <div class="artist-detail-copy">

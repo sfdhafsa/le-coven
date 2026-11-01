@@ -24,10 +24,6 @@
         link.setAttribute("aria-label", `Découvrir ${artist.nom}`);
         const portrait = document.createElement("div");
         portrait.className = "artist-portrait";
-        const monogram = document.createElement("span");
-        monogram.textContent = artist.nom.slice(0, 1);
-        monogram.setAttribute("aria-hidden", "true");
-        portrait.append(monogram);
         if (artist.imageUrl) {
           const image = document.createElement("img");
           image.src = artist.imageUrl;
