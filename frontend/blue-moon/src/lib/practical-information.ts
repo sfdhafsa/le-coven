@@ -56,9 +56,12 @@ export async function loadPracticalInformationPage() {
   element("benevolat").hidden = !link("volunteer-link", edition.lienBenevolat);
   element("venue-grid").replaceChildren(...venues.map(venue => {
     const card = document.createElement("article");
+    card.className = "venue-card";
     const heading = document.createElement("h3");
     heading.textContent = venue.nom;
-    card.append(heading, paragraph([venue.adresse, venue.codePostal, venue.ville].filter(Boolean).join(" ")));
+    const address = paragraph([venue.adresse, venue.codePostal, venue.ville].filter(Boolean).join(" "));
+    address.className = "venue-address";
+    card.append(heading, address);
     if (venue.informationsAcces) card.append(paragraph(venue.informationsAcces));
     const href = safeUrl(venue.lienCarte);
     if (href) {
@@ -74,6 +77,7 @@ export async function loadPracticalInformationPage() {
   const information = await getPracticalInformation(edition.documentId);
   element("practical-grid").replaceChildren(...information.map(info => {
     const card = document.createElement("article");
+    card.className = "practical-card";
     const heading = document.createElement("h3");
     heading.textContent = info.titre;
     card.append(heading);

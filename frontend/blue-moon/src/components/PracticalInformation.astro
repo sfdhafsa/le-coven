@@ -2,27 +2,41 @@
 // Conserved for the future dedicated practical information page.
 ---
 
-<section class="information section-shell" id="infos-pratiques" aria-labelledby="info-title">
-  <div class="section-heading">
-    <p class="eyebrow">Préparer votre venue</p>
-    <h1 id="info-title" class="page-title">Informations pratiques</h1>
-    <p>Retrouvez le lieu, les accès et toutes les informations utiles pour profiter du festival.</p>
-  </div>
-  <div class="practical-gallery" aria-label="Ambiance du festival Blue Moon">
-    <figure class="practical-visual practical-visual-main">
-      <img src="/images/hero-concert.jfif" alt="Public réuni devant la scène pendant un concert" width="1500" height="1000" />
+<section class="information" id="infos-pratiques" aria-labelledby="info-title">
+  <div class="practical-hero section-shell">
+    <div class="practical-hero-copy">
+      <p class="eyebrow">Préparer votre venue</p>
+      <h1 id="info-title" class="page-title">Tout savoir<br />avant de venir</h1>
+      <p>Lieu, accès et informations essentielles : préparez votre expérience Blue Moon en quelques instants.</p>
+      <a class="practical-jump" href="#lieu">Découvrir le lieu <span aria-hidden="true">↓</span></a>
+    </div>
+    <figure class="practical-hero-visual">
+      <img src="/images/hero-concert.jfif" alt="Public réuni devant la scène pendant un concert" width="1500" height="1000" fetchpriority="high" />
+      <figcaption><span>Blue Moon</span> Tourcoing · Hauts-de-France</figcaption>
     </figure>
-    <figure class="practical-visual practical-visual-accent">
-      <img src="/images/hero-performer.png" alt="Artiste sur scène pendant un concert" width="1600" height="1067" />
-    </figure>
   </div>
-  <div class="info-grid" id="venue-grid"></div>
-  <div class="info-grid" id="practical-grid"></div>
-  <p id="practical-status" role="status"></p>
-  <div class="info-grid">
-    <article id="benevolat" hidden>
-      <h3>Bénévolat</h3>
-      <a id="volunteer-link" class="text-link">Rejoindre l’aventure ↗</a>
+
+  <div class="practical-content section-shell">
+    <section class="venue-section" id="lieu" aria-labelledby="venue-title">
+      <div class="practical-section-heading">
+        <div><p class="eyebrow">Point de rendez-vous</p><h2 id="venue-title">Le lieu</h2></div>
+        <p>Un espace singulier et accessible, choisi pour accueillir toute l’énergie du festival.</p>
+      </div>
+      <div class="info-grid venue-grid" id="venue-grid"></div>
+    </section>
+
+    <section class="essentials-section" aria-labelledby="essentials-title">
+      <div class="practical-section-heading">
+        <div><p class="eyebrow">L’essentiel</p><h2 id="essentials-title">Préparez votre visite</h2></div>
+        <p>Retrouvez ici les informations publiées par l’équipe organisatrice.</p>
+      </div>
+      <div class="info-grid practical-grid" id="practical-grid"></div>
+      <p id="practical-status" role="status"></p>
+    </section>
+
+    <article class="volunteer-card" id="benevolat" hidden>
+      <div><p class="eyebrow">Participer autrement</p><h2>Rejoignez l’aventure</h2><p>Envie de vivre Blue Moon de l’intérieur ? Découvrez les missions bénévoles du festival.</p></div>
+      <a id="volunteer-link" class="button button-outline">Devenir bénévole <span aria-hidden="true">↗</span></a>
     </article>
   </div>
 </section>

@@ -19,15 +19,41 @@
 @media(min-width:700px) and (max-width:1199px){.info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.info-grid article:last-child{grid-column:1/-1}}
 
 .page-title { margin: 14px 0 20px; font-size: clamp(42px, 7vw, 88px); line-height: .95; letter-spacing: -.06em; }
-.practical-gallery { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(220px, .65fr); gap: clamp(16px, 2.5vw, 32px); align-items: end; margin: 0 0 clamp(40px, 7vw, 84px); }
-.practical-visual { position: relative; overflow: hidden; margin: 0; border: 1px solid #123340; border-radius: 28px; background: #080917; }
-.practical-visual-main { aspect-ratio: 16 / 9; }
-.practical-visual-accent { aspect-ratio: 3 / 4; margin-bottom: clamp(-34px, -2.5vw, -18px); }
-.practical-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, #05041099), linear-gradient(90deg, #05041077, transparent 55%); pointer-events: none; }
-.practical-visual img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 38%; filter: saturate(.78) contrast(1.08); }
-.practical-visual-main img { object-position: center 48%; }
-.practical-visual-accent img { object-position: 48% center; }
-@media(max-width:699px){.practical-gallery{grid-template-columns:minmax(0,1fr);gap:14px}.practical-visual{border-radius:20px}.practical-visual-main{aspect-ratio:4 / 3}.practical-visual-accent{width:68%;aspect-ratio:4 / 3;margin:-64px 16px 0 auto;border:5px solid #050410}.page-title{font-size:clamp(40px,14vw,64px)}}
+.information { padding-block: 0; overflow: hidden; background: radial-gradient(circle at 14% 12%, #00394635, transparent 27%); }
+.practical-hero { min-height: calc(100svh - 79px); display: grid; grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr); align-items: center; gap: clamp(44px, 7vw, 100px); padding-block: clamp(50px, 7vw, 90px); }
+.practical-hero-copy > p:not(.eyebrow) { max-width: 610px; color: #a6b9c6; font-size: clamp(17px, 1.8vw, 22px); line-height: 1.75; }
+.practical-hero .page-title { margin-block: 20px 30px; font-size: clamp(54px, 7.3vw, 108px); }
+.practical-jump { display: inline-flex; align-items: center; gap: 18px; margin-top: 24px; padding-bottom: 8px; border-bottom: 1px solid #17616c; color: #49e8ea; font-size: 13px; }
+.practical-jump span { font-size: 18px; }
+.practical-hero-visual { position: relative; overflow: hidden; margin: 0; aspect-ratio: 4 / 5; max-height: 650px; border: 1px solid #17616c; border-radius: 160px 160px 30px 30px; background: #080917; box-shadow: 0 30px 100px #0009, 0 0 60px #00d9e51a; }
+.practical-hero-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #05041010 40%, #050410e8 100%); pointer-events: none; }
+.practical-hero-visual img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; filter: saturate(.74) contrast(1.08); }
+.practical-hero-visual figcaption { position: absolute; z-index: 1; left: 32px; right: 32px; bottom: 28px; display: flex; justify-content: space-between; gap: 20px; color: #c3d4d9; font-family: ui-monospace, monospace; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; }
+.practical-hero-visual figcaption span { color: #3be7e9; }
+.practical-content { padding-block: clamp(70px, 10vw, 140px); }
+.venue-section,.essentials-section { scroll-margin-top: 110px; }
+.essentials-section { margin-top: clamp(80px, 11vw, 150px); }
+.practical-section-heading { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .7fr); align-items: end; gap: 40px; margin-bottom: 42px; }
+.practical-section-heading h2 { margin-bottom: 0; font-size: clamp(40px, 6vw, 76px); }
+.practical-section-heading > p { margin: 0; color: #8fa4ad; line-height: 1.8; }
+.venue-grid { grid-template-columns: 1fr; }
+.venue-grid .venue-card { position: relative; min-height: 300px; padding: clamp(34px, 6vw, 70px); background: radial-gradient(circle at 88% 20%, #08747e42, transparent 32%), linear-gradient(130deg, #0a2731, #080917 62%); }
+.venue-card::after { content: "⌖"; position: absolute; top: 50%; right: clamp(34px, 8vw, 110px); transform: translateY(-50%); color: #20dbe2; font-size: clamp(90px, 15vw, 190px); line-height: 1; opacity: .24; }
+.venue-card h3 { position: relative; z-index: 1; max-width: 70%; margin: 0 0 18px; font-size: clamp(34px, 5vw, 64px); }
+.venue-card p,.venue-card a { position: relative; z-index: 1; max-width: 660px; }
+.venue-address { color: #d8f6f7!important; font-size: clamp(16px, 2vw, 21px); }
+.practical-grid { counter-reset: practical-card; }
+.practical-grid .practical-card { position: relative; padding-top: 72px; transition: transform .2s, border-color .2s; }
+.practical-grid .practical-card:hover { transform: translateY(-4px); border-color: #17616c; }
+.practical-card::before { counter-increment: practical-card; content: "0" counter(practical-card); position: absolute; top: 26px; left: 30px; color: #20dbe2; font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: .16em; }
+.practical-card h3 { margin-top: 0; }
+.volunteer-card { display: flex; align-items: center; justify-content: space-between; gap: 40px; margin-top: clamp(70px, 10vw, 130px); padding: clamp(34px, 6vw, 70px); border: 1px solid #12505a; border-radius: 28px; background: linear-gradient(130deg, #071e29, #080917); }
+.volunteer-card > div { max-width: 650px; }
+.volunteer-card h2 { margin-bottom: 14px; }
+.volunteer-card p:last-child { color: #8fa4ad; line-height: 1.75; }
+.volunteer-card .button { flex: 0 0 auto; }
+@media(max-width:899px){.practical-hero{min-height:0;grid-template-columns:1fr}.practical-hero-visual{width:min(100%,600px);max-height:none;margin-inline:auto;aspect-ratio:4/3;border-radius:28px}.practical-section-heading{grid-template-columns:1fr;gap:16px}.volunteer-card{align-items:flex-start;flex-direction:column}.volunteer-card .button{width:100%}}
+@media(max-width:599px){.practical-hero{padding-top:40px}.practical-hero .page-title{font-size:clamp(46px,14vw,66px)}.practical-hero-visual{aspect-ratio:1;border-radius:22px}.practical-hero-visual figcaption{left:20px;right:20px;bottom:18px;align-items:flex-start;flex-direction:column;gap:5px}.venue-grid .venue-card{min-height:0}.venue-card::after{top:34px;right:26px;transform:none;font-size:80px}.venue-card h3{max-width:78%;font-size:34px}.practical-section-heading h2{font-size:42px}}
 
 /* The festival story is editorial content, independent of each edition. */
 .next-edition { padding-block: clamp(56px, 8vw, 100px); border-bottom: 1px solid #123340; }
