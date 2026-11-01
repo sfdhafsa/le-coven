@@ -52,30 +52,37 @@ const links = [
     </header>
 
     <main id="main" class="ticketing-page">
-      <section class="ticketing-intro section-shell" aria-labelledby="ticketing-title">
-        <div class="ticketing-copy">
-          <p class="eyebrow">Blue Moon Festival 2027</p>
-          <h1 id="ticketing-title" class="page-title">Billetterie</h1>
-          <p>Réservez votre place pour deux jours de musique, de création et d’expériences collectives au Phare de Tourcoing.</p>
-        </div>
-        <div class="ticketing-orbit" aria-hidden="true"><span></span></div>
-      </section>
-
-      <section id="reserver" class="ticketing-options section-shell" aria-labelledby="booking-title">
-        <div class="section-heading">
-          <p class="eyebrow">Réserver</p>
-          <h2 id="booking-title">Choisissez votre billetterie</h2>
-        </div>
-        <article class="ticket-provider ticket-provider-shotgun">
-          <div>
-            <p class="ticket-provider-label">Billetterie officielle</p>
-            <h3>Shotgun</h3>
-            <p>Consultez les billets disponibles et finalisez votre réservation sur la plateforme sécurisée Shotgun.</p>
+      <section id="reserver" class="ticketing-hero section-shell" aria-labelledby="ticketing-title">
+        <div class="ticketing-stage">
+          <div class="ticketing-main">
+            <p class="ticket-live"><span aria-hidden="true"></span> Billetterie ouverte</p>
+            <p class="eyebrow">Blue Moon Festival 2027</p>
+            <h1 id="ticketing-title" class="ticketing-title">Réservez<br />votre place</h1>
+            <p class="ticketing-lead">Deux jours de musique et de création collective dans un lieu singulier, au cœur de Tourcoing.</p>
+            <dl class="ticketing-facts">
+              <div><dt>Date</dt><dd>21 — 22 mai 2027</dd></div>
+              <div><dt>Lieu</dt><dd>Le Phare · Tourcoing</dd></div>
+            </dl>
           </div>
-          <a class="button button-primary" href={shotgunUrl} target="_blank" rel="noopener noreferrer">
-            Prendre mes billets <span aria-hidden="true">↗</span>
-          </a>
-        </article>
+
+          <aside class="ticket-checkout" aria-label="Réserver sur Shotgun">
+            <div class="ticket-checkout-top">
+              <span>Pass festival</span><span>2027</span>
+            </div>
+            <div class="ticket-moon" aria-hidden="true"><span></span></div>
+            <div class="ticket-checkout-copy">
+              <p>Billetterie officielle</p>
+              <h2>Shotgun</h2>
+              <span>Réservation et paiement sécurisés sur Shotgun.</span>
+            </div>
+            <a class="button button-primary" href={shotgunUrl} target="_blank" rel="noopener noreferrer">
+              Accéder aux billets <span aria-hidden="true">↗</span>
+            </a>
+          </aside>
+        </div>
+        <div class="ticketing-reassurance" aria-label="Informations sur la réservation">
+          <span>Paiement sécurisé</span><span>Billet numérique</span><span>Confirmation immédiate</span>
+        </div>
       </section>
 
       {helloAssoWidgetUrl && (
