@@ -4,6 +4,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Container from "../components/ui/Container.astro";
 
 const STRAPI_URL = (import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337").replace(/\/$/, "");
+const NEWSLETTER_URL = import.meta.env.PUBLIC_NEWSLETTER_URL
+  ?? "https://b1c9556b.sibforms.com/serve/MUIFAMlvCQnwKT0TDIq_Q19GZh_j3QaprDfIsgk6mYmClCb-xg9eSvVnhZWFa_D9FidD5awxnmydpZs1VFneOx_YpqY55umNSfm5EAWdAEFAi4AjXOFTLSybMcCOTI4UB0nUWnkVopLhEeF1qGdzkztAYpM5MA2giy4qd2CRfJPjwrn9y4km8Wd7Y5XI93lf30-aigv51zJ5XUkHzQ==";
 
 interface Media {
   url?: string;
@@ -182,13 +184,18 @@ const formatDate = (date: string | null) => date
           <h2>Les nouvelles du Coven</h2>
           <p>Programmation, appels à bénévoles et actualités : recevez l’essentiel sans bruit inutile.</p>
         </div>
-        <form class="home-newsletter__form" action={import.meta.env.PUBLIC_NEWSLETTER_ACTION ?? "/newsletter"} method="post">
-          <label for="home-newsletter-email">Votre adresse e-mail</label>
-          <div>
-            <input id="home-newsletter-email" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr" required />
-            <button type="submit">S’inscrire</button>
-          </div>
-        </form>
+        <div class="home-newsletter__action">
+          <a
+            class="home-newsletter__link"
+            href={NEWSLETTER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            S’inscrire à la newsletter
+            <span aria-hidden="true">↗</span>
+          </a>
+          <p>Le formulaire d’inscription sécurisé s’ouvrira sur Brevo.</p>
+        </div>
       </div>
     </Container>
   </section>
