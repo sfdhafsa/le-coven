@@ -1,11 +1,11 @@
 ---
 import FestivalBrand from "../components/FestivalBrand.astro";
 import "../styles/global.css";
-import ArtistLineup from "../components/ArtistLineup.astro";
 const covenUrl = (import.meta.env.PUBLIC_COVEN_URL || "http://localhost:4321").replace(/\/$/, "");
 const ticketUrl = "/billetterie";
 const links = [
   { label: "Accueil", href: "#accueil" },
+  { label: "Line-up", href: "/line-up" },
   { label: "Infos pratiques", href: "/infos-pratiques" },
   { label: "Billetterie", href: ticketUrl },
 ];
@@ -59,7 +59,6 @@ const links = [
           <p class="next-edition-description" id="next-edition-description" hidden></p>
         </div>
       </section>
-      <ArtistLineup />
       <section class="festival-story section-shell" id="origine" aria-labelledby="origin-title">
         <div class="story-heading">
           <p class="eyebrow">L’esprit du festival</p>
