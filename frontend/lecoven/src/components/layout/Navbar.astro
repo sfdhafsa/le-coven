@@ -3,9 +3,21 @@ import Container from "../ui/Container.astro";
 
 const links = [
   { label: "Accueil", href: "/" },
-  { label: "Le Coven", href: "/le-coven" },
+  {
+    label: "Le Coven",
+    href: "/le-coven",
+    children: [
+      { label: "Nos missions", href: "/le-coven#nos-missions" },
+      { label: "Notre histoire", href: "/le-coven#notre-histoire" },
+      { label: "La Cour Centrale", href: "/le-coven#cour-centrale" },
+      { label: "La Fédération", href: "/collectifs" },
+      { label: "Les partenaires", href: "/partenaires" },
+    ],
+  },
   { label: "Événements", href: "/events" },
   { label: "Blue Moon", href: "/blue-moon" },
+  { label: "Nous soutenir", href: "/#nous-soutenir", featured: true },
+  { label: "Boutique", href: "https://www.helloasso.com/associations/le-coven/boutiques/blue-moon-festival", external: true },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -19,24 +31,32 @@ const isCurrent = (href: string) =>
     <nav class="site-nav" aria-label="Navigation principale">
       <a class="site-brand" href="/" aria-label="Le Coven, accueil">
         <img
-          src="/images/logo-le-coven.jpeg"
+          src="/images/logo-le-coven-v2.png"
           alt=""
           width="88"
           height="88"
         />
-        <span class="site-brand__name">Le Coven</span>
+        <span class="site-brand__lockup" aria-hidden="true">
+          <span class="site-brand__le">Le</span>
+          <span class="site-brand__name">Coven</span>
+        </span>
+        <span class="site-brand__tagline">Fédération pour les collectifs de musiques électroniques des Hauts-de-France</span>
       </a>
 
       <ul class="desktop-navigation">
         {links.map((link) => (
-          <li>
-            <a
-              href={link.href}
-              aria-current={isCurrent(link.href) ? "page" : undefined}
-              class:list={["nav-link", isCurrent(link.href) && "nav-link--active"]}
-            >
-              {link.label}
-            </a>
+          <li class:list={[link.children && "nav-dropdown"]}>
+            {link.children ? (
+              <details open={false}>
+                <summary class:list={["nav-link", isCurrent(link.href) && "nav-link--active"]}>{link.label}</summary>
+                <div class="nav-dropdown__menu">
+                  <a href={link.href}>Présentation</a>
+                  {link.children.map((child) => <a href={child.href}>{child.label}</a>)}
+                </div>
+              </details>
+            ) : (
+              <a href={link.href} target={link.external ? "_blank" : undefined} rel={link.external ? "noopener noreferrer" : undefined} aria-current={isCurrent(link.href) ? "page" : undefined} class:list={["nav-link", link.featured && "nav-link--support", link.external && "nav-link--shop", isCurrent(link.href) && "nav-link--active"]}>{link.label}</a>
+            )}
           </li>
         ))}
       </ul>
@@ -60,11 +80,18 @@ const isCurrent = (href: string) =>
           <li>
             <a
               href={link.href}
+              target={link.external ? "_blank" : undefined}
+              rel={link.external ? "noopener noreferrer" : undefined}
               aria-current={isCurrent(link.href) ? "page" : undefined}
-              class:list={["mobile-nav-link", isCurrent(link.href) && "mobile-nav-link--active"]}
+              class:list={["mobile-nav-link", link.featured && "mobile-nav-link--support", link.external && "mobile-nav-link--shop", isCurrent(link.href) && "mobile-nav-link--active"]}
             >
               {link.label}
             </a>
+            {link.children && (
+              <ul class="mobile-subnavigation">
+                {link.children.map((child) => <li><a href={child.href}>{child.label}</a></li>)}
+              </ul>
+            )}
           </li>
         ))}
       </ul>

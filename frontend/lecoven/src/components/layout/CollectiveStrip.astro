@@ -52,11 +52,9 @@ const repeatedCollectives = [...collectives, ...collectives];
   <div class="collective-strip__viewport">
     <div class="collective-strip__track">
       {repeatedCollectives.map((collective, index) => (
-        <a
+        <span
           class="collective-strip__item"
-          href={`/collectifs/${collective.slug}`}
           aria-hidden={index >= collectives.length ? "true" : undefined}
-          tabindex={index >= collectives.length ? -1 : undefined}
         >
           {logoUrl(collective.logo) ? (
             <img
@@ -70,7 +68,7 @@ const repeatedCollectives = [...collectives, ...collectives];
             <span class="collective-strip__mark" aria-hidden="true">✦</span>
           )}
           <span>{collective.name}</span>
-        </a>
+        </span>
       ))}
     </div>
   </div>

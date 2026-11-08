@@ -6,6 +6,8 @@ interface Props {
   type?: "button" | "submit" | "reset";
   class?: string;
   ariaLabel?: string;
+  target?: "_blank" | "_self";
+  rel?: string;
 }
 
 const {
@@ -15,14 +17,19 @@ const {
   type = "button",
   class: className,
   ariaLabel,
+  target,
+  rel,
 } = Astro.props;
 
 const classes = ["c-button", `c-button--${variant}`, `c-button--${size}`, className];
+const external = href ? /^https?:\/\//i.test(href) : false;
+const linkTarget = target ?? (external ? "_blank" : undefined);
+const linkRel = rel ?? (linkTarget === "_blank" ? "noopener noreferrer" : undefined);
 ---
 
 {
   href ? (
-    <a class:list={classes} href={href} aria-label={ariaLabel}>
+    <a class:list={classes} href={href} aria-label={ariaLabel} target={linkTarget} rel={linkRel}>
       <slot />
     </a>
   ) : (

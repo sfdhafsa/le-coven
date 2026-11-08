@@ -9,7 +9,7 @@ const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook
 
 <BaseLayout
   title="Contact — Le Coven"
-  description="Contactez Le Coven pour une question générale, une demande presse, un partenariat ou une question administrative."
+  description="Contactez l’association Le Coven."
 >
   <section class="contact-page">
     <div class="contact-page__geometry contact-page__geometry--one" aria-hidden="true"></div>
@@ -20,7 +20,7 @@ const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook
         <header class="contact-heading">
           <p class="c-eyebrow"><span aria-hidden="true">✦</span> Formulaire <span aria-hidden="true">✦</span></p>
           <h1>Écrivez-nous</h1>
-          <p>Choisissez le service concerné : votre message sera adressé à la bonne équipe.</p>
+          <p>Une question, une proposition ou l’envie de participer ? Écrivez-nous directement.</p>
         </header>
 
         <form class="contact-form" data-contact-form>
@@ -34,18 +34,6 @@ const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook
               <input name="email" type="email" autocomplete="email" required />
             </label>
           </div>
-
-          <label>
-            <span>Service</span>
-            <select name="service" required>
-              <option value="" selected disabled>Sélectionner un service</option>
-              <option value="Question générale" data-recipient="lecoven@etik.com">Contact général</option>
-              <option value="Presse" data-recipient="lecoven@etik.com">Presse</option>
-              <option value="Partenariat" data-recipient="lecoven@etik.com">Partenariats</option>
-              <option value="Bénévolat" data-recipient="lecoven@etik.com">Bénévolat</option>
-              <option value="Administration" data-recipient="administration@lecoven.fr">Administration et juridique</option>
-            </select>
-          </label>
 
           <label>
             <span>Message</span>
@@ -67,26 +55,17 @@ const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook
         <header class="contact-heading">
           <p class="c-eyebrow"><span aria-hidden="true">✦</span> Coordonnées <span aria-hidden="true">✦</span></p>
           <h2 id="contact-details-title">Nous trouver</h2>
-          <p>Une adresse dédiée selon la nature de votre demande.</p>
+          <p>Une adresse unique pour toutes vos demandes.</p>
         </header>
 
         <div class="contact-details">
           <article class="contact-detail-card">
-            <p class="contact-detail-card__label">Contact général · Presse · Partenariats</p>
+            <p class="contact-detail-card__label">Contact</p>
             <a href="mailto:lecoven@etik.com">
               <span aria-hidden="true">✉</span>
               lecoven@etik.com
             </a>
             <p>Pour toute question publique, demande presse, proposition ou partenariat.</p>
-          </article>
-
-          <article class="contact-detail-card">
-            <p class="contact-detail-card__label">Mentions légales · Administration</p>
-            <a href="mailto:administration@lecoven.fr">
-              <span aria-hidden="true">✉</span>
-              administration@lecoven.fr
-            </a>
-            <p>Pour les questions administratives, juridiques et contractuelles.</p>
           </article>
 
           <article class="contact-detail-card">
@@ -116,19 +95,11 @@ const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook
     if (!form.reportValidity()) return;
 
     const data = new FormData(form);
-    const select = form.elements.namedItem("service") as HTMLSelectElement;
-    const recipient = select.selectedOptions[0]?.dataset.recipient;
-
-    if (!recipient) {
-      if (status) status.textContent = "Veuillez sélectionner un service.";
-      return;
-    }
-
+    const recipient = "lecoven@etik.com";
     const name = String(data.get("name") ?? "");
     const email = String(data.get("email") ?? "");
-    const service = String(data.get("service") ?? "Contact");
     const message = String(data.get("message") ?? "");
-    const subject = `[Site Le Coven] ${service}`;
+    const subject = "[Site Le Coven] Contact";
     const body = `Nom : ${name}\nE-mail : ${email}\n\n${message}`;
 
     window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;

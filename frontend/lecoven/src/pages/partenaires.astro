@@ -1,0 +1,39 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/ui/Container.astro";
+
+const STRAPI_URL = (import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337").replace(/\/$/, "");
+interface Media { url?: string; alternativeText?: string | null }
+interface Partner { nom: string; description?: string | null; logo?: Media | null; lienSiteWeb?: string | null; ordreAffichage?: number | null; actif?: boolean | null }
+let partners: Partner[] = [];
+try {
+  const response = await fetch(`${STRAPI_URL}/api/partners?populate=logo&sort=ordreAffichage:asc&pagination[pageSize]=100`);
+  if (response.ok) {
+    const payload: { data?: Partner[] } = await response.json();
+    partners = (payload.data ?? []).filter((item) => item.actif !== false);
+  }
+} catch { partners = []; }
+const mediaUrl = (media?: Media | null) => media?.url ? (media.url.startsWith("http") ? media.url : `${STRAPI_URL}${media.url}`) : undefined;
+---
+
+<BaseLayout title="Partenaires et financeurs — Le Coven" description="Découvrez les partenaires et financeurs qui accompagnent les projets du Coven.">
+  <header class="directory-hero">
+    <Container size="wide">
+      <p class="c-eyebrow">Ils rendent le projet possible</p>
+      <h1>Partenaires et financeurs</h1>
+      <p>Merci aux structures qui soutiennent nos actions, nos artistes et nos événements.</p>
+    </Container>
+  </header>
+  <section class="directory-section">
+    <Container size="wide">
+      {partners.length > 0 ? (
+        <div class="partner-directory-grid">
+          {partners.map((partner) => {
+            const body = <><div class="partner-directory-card__logo">{mediaUrl(partner.logo) ? <img src={mediaUrl(partner.logo)} alt={partner.logo?.alternativeText || partner.nom} loading="lazy" /> : <span>{partner.nom}</span>}</div><div><h2>{partner.nom}</h2>{partner.description && <p>{partner.description}</p>}</div></>;
+            return partner.lienSiteWeb ? <a class="partner-directory-card" href={partner.lienSiteWeb} target="_blank" rel="noopener noreferrer">{body}</a> : <article class="partner-directory-card">{body}</article>;
+          })}
+        </div>
+      ) : <p class="directory-empty">Les partenaires et financeurs seront bientôt présentés ici.</p>}
+    </Container>
+  </section>
+</BaseLayout>

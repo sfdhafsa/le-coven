@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Card from "../components/ui/Card.astro";
 import Container from "../components/ui/Container.astro";
 import Button from "../components/ui/Button.astro";
 
@@ -138,8 +137,6 @@ const mediaUrl = (image?: StrapiImage | null) => {
   return path.startsWith("http") ? path : `${STRAPI_URL}${path}`;
 };
 
-let collectives: Array<{ name: string; slug: string; description?: string; logo?: StrapiImage }> = [];
-let partners: Array<{ name: string; description?: string | null; websiteUrl?: string | null; logo?: StrapiImage | null }> = [];
 let teamMembers: Array<{
   firstName: string;
   lastName: string;
@@ -147,41 +144,6 @@ let teamMembers: Array<{
   profession: string | null;
   photo: StrapiImage | null;
 }> = [];
-
-try {
-  const response = await fetch(`${STRAPI_URL}/api/collectives?populate=logo`);
-  if (response.ok) {
-    const payload: { data?: CollectiveEntry[] } = await response.json();
-    const entries = (payload.data ?? [])
-      .filter((item) => item.isActive !== false && item.actif !== false)
-      .sort((a, b) => (a.displayOrder ?? a.ordreAffichage ?? 0) - (b.displayOrder ?? b.ordreAffichage ?? 0))
-      .map((item) => ({
-        name: item.name ?? item.nom ?? "Collectif",
-        slug: item.slug ?? "",
-        description: item.shortDescription ?? item.descriptionCourte ?? undefined,
-        logo: item.logo ?? undefined,
-      }))
-      .filter((item) => item.slug);
-    collectives = entries;
-  }
-} catch {
-  collectives = [];
-}
-
-try {
-  const response = await fetch(`${STRAPI_URL}/api/partners?populate=logo`);
-  if (response.ok) {
-    const payload: { data?: PartnerEntry[] } = await response.json();
-    partners = (payload.data ?? []).map((item) => ({
-      name: item.name ?? item.nom ?? "Partenaire",
-      description: item.description,
-      websiteUrl: item.websiteUrl ?? item.siteWeb,
-      logo: item.logo,
-    }));
-  }
-} catch {
-  partners = [];
-}
 
 try {
   const response = await fetch(`${STRAPI_URL}/api/team-members?populate=photo`);
@@ -197,7 +159,13 @@ try {
         profession: member.profession ?? null,
         photo: member.photo ?? null,
       }))
-      .filter((member) => member.firstName || member.lastName);
+      .filter((member) => member.firstName || member.lastName)
+      .filter((member) => `${member.firstName} ${member.lastName}`.trim().toLocaleLowerCase("fr") !== "colombe capon")
+      .sort((a, b) => {
+        const aLaura = `${a.firstName} ${a.lastName}`.trim().toLocaleLowerCase("fr") === "laura dekeyser";
+        const bLaura = `${b.firstName} ${b.lastName}`.trim().toLocaleLowerCase("fr") === "laura dekeyser";
+        return Number(bLaura) - Number(aLaura);
+      });
     if (entries.length > 0) teamMembers = entries;
   }
 } catch {
@@ -210,6 +178,13 @@ const sectionAnchor = (title: string) => title
   .toLowerCase()
   .replace(/[^a-z0-9]+/g, "-")
   .replace(/(^-|-$)/g, "");
+const editorialSections = sections.filter((section) => {
+  const anchor = sectionAnchor(section.title);
+  return anchor.includes("mission") || anchor.includes("histoire");
+});
+const helloAssoUrl = import.meta.env.PUBLIC_HELLOASSO_URL ?? "https://www.helloasso.com/associations/le-coven";
+const shopUrl = import.meta.env.PUBLIC_SHOP_URL ?? "https://www.helloasso.com/associations/le-coven/boutiques/blue-moon-festival";
+const donateUrl = import.meta.env.PUBLIC_DONATE_URL ?? "https://www.helloasso.com/associations/le-coven/formulaires/1";
 ---
 
 <BaseLayout
@@ -223,36 +198,36 @@ const sectionAnchor = (title: string) => title
     <div class="association-page-hero__star" aria-hidden="true"></div>
     <Container size="wide" class="association-page-hero__content">
       {page.eyebrow && <p class="c-eyebrow">{page.eyebrow}</p>}
-      <h1>{page.title}</h1>
+      <h1 class="association-page-wordmark">
+        <span class="sr-only">{page.title}</span>
+        <img src="/images/le-coven-wordmark.png" alt="" width="551" height="207" aria-hidden="true" />
+      </h1>
       {page.summary && <p class="association-page-hero__summary">{page.summary}</p>}
     </Container>
   </header>
 
-  <section class="association-page-content" aria-label="Présentation de l’association">
+  <section class="association-membership association-membership--priority" id="adhesion">
     <Container size="wide">
-      <div class="association-page-grid">
-        {sections.map((section, index) => (
-          <Card
-            variant={index === sections.length - 1 ? "glow" : "outline"}
-            id={sectionAnchor(section.title)}
-            class:list={[
-              "association-content-card",
-              index === sections.length - 1 && "association-content-card--featured",
-            ]}
-          >
-            <h2>{section.title}</h2>
-            <div class="association-content-card__copy">
-              {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-            </div>
-            {section.title === "Nos missions" && (
-              <Button href="/articles/mission" variant="secondary" size="sm">Lire notre mission</Button>
-            )}
-            {section.title === "Notre histoire" && (
-              <Button href="/articles/histoire" variant="secondary" size="sm">Découvrir notre histoire</Button>
-            )}
-          </Card>
-        ))}
+      <div class="association-membership__panel">
+        <div>
+          <p class="c-eyebrow">Faire vivre le projet</p>
+          <h2>Rejoindre l’association</h2>
+          <p>Adhérez au Coven, soutenez ses actions et participez à une aventure culturelle collective.</p>
+        </div>
+        <Button href={helloAssoUrl} size="lg">Adhérer avec HelloAsso</Button>
       </div>
+    </Container>
+  </section>
+
+  <section class="association-editorial" aria-label="Missions et histoire de l’association">
+    <Container size="wide">
+      {editorialSections.map((section) => (
+        <article id={sectionAnchor(section.title)} class="association-editorial__section">
+          <p class="c-eyebrow">Le Coven</p>
+          <h2>{section.title}</h2>
+          <div>{section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}</div>
+        </article>
+      ))}
     </Container>
   </section>
 
@@ -261,11 +236,11 @@ const sectionAnchor = (title: string) => title
       <div class="association-section-heading">
         <p class="c-eyebrow">L’équipe dirigeante</p>
         <h2>La Cour Centrale</h2>
-        <p>Neuf membres réunis pour faire vivre le projet associatif, culturel et artistique du Coven.</p>
+        <p>Une équipe réunie pour faire vivre le projet associatif, culturel et artistique du Coven.</p>
       </div>
       <div class="coven-team__grid">
         {teamMembers.map((member) => (
-          <article class="coven-member-card">
+          <article class:list={["coven-member-card", `${member.firstName} ${member.lastName}`.trim().toLocaleLowerCase("fr") === "laura dekeyser" && "coven-member-card--featured"]}>
             <div class="coven-member-card__portrait">
               {mediaUrl(member.photo) ? (
                 <img src={mediaUrl(member.photo)} alt={`${member.firstName} ${member.lastName}`} loading="lazy" />
@@ -282,86 +257,34 @@ const sectionAnchor = (title: string) => title
       {teamMembers.length === 0 && (
         <p class="partner-empty">Aucun membre d’équipe publié n’est actuellement disponible dans Strapi.</p>
       )}
-      <div class="coven-thanks">
+      <div class="coven-thanks coven-thanks--centered">
         <p class="c-eyebrow">Merci</p>
         <p>Le Coven remercie chaleureusement ses adhérent·es, bénévoles, partenaires, salarié·es et prestataires. Leur engagement rend chaque projet possible.</p>
       </div>
     </Container>
   </section>
 
-  <section class="association-directory" id="collectifs">
+  <section class="association-links" aria-label="Découvrir la Fédération et ses partenaires">
     <Container size="wide">
-      <div class="association-section-heading">
-        <p class="c-eyebrow">Créer ensemble</p>
-        <h2>Les collectifs</h2>
-        <p>Des identités artistiques singulières réunies autour d’une même énergie.</p>
+      <div class="association-links__grid">
+        <a href="/collectifs"><p class="c-eyebrow">La Fédération</p><h2>Nos collectifs</h2><p>Découvrez les membres de la Fédération, leurs univers musicaux et leurs réseaux.</p><span>Voir les collectifs →</span></a>
+        <a href="/partenaires"><p class="c-eyebrow">Nos soutiens</p><h2>Partenaires et financeurs</h2><p>Découvrez les structures qui rendent nos projets possibles.</p><span>Voir les partenaires →</span></a>
       </div>
-      <div class="collective-card-grid">
-        {collectives.map((collective) => (
-          <a class="collective-card" href={`/collectifs/${collective.slug}`}>
-            <div class="collective-card__visual">
-              {mediaUrl(collective.logo) ? (
-                <img src={mediaUrl(collective.logo)} alt="" loading="lazy" />
-              ) : (
-                <span aria-hidden="true">✦</span>
-              )}
-            </div>
-            <div>
-              <h3>{collective.name}</h3>
-              <p>{collective.description}</p>
-              <span class="collective-card__link">Voir la page <span aria-hidden="true">→</span></span>
-            </div>
-          </a>
-        ))}
-      </div>
-      {collectives.length === 0 && (
-        <p class="partner-empty">Aucun collectif publié n’est actuellement disponible dans Strapi.</p>
-      )}
     </Container>
   </section>
 
-  <section class="association-partners" id="partenaires">
+  <section class="association-support" id="nous-soutenir">
     <Container size="wide">
-      <div class="association-section-heading">
-        <p class="c-eyebrow">Ils rendent le projet possible</p>
-        <h2>Partenaires et financeurs</h2>
-      </div>
-      {partners.length > 0 ? (
-        <div class="partner-logo-grid">
-          {partners.map((partner) => (
-            <a
-              class="partner-logo-card"
-              href={partner.websiteUrl ?? "#partenaires"}
-              target={partner.websiteUrl ? "_blank" : undefined}
-              rel={partner.websiteUrl ? "noreferrer" : undefined}
-              aria-label={partner.websiteUrl ? `${partner.name}, ouvrir le site` : partner.name}
-            >
-              {mediaUrl(partner.logo) ? (
-                <img src={mediaUrl(partner.logo)} alt={partner.name} loading="lazy" />
-              ) : (
-                <span class="partner-logo-card__fallback">{partner.name}</span>
-              )}
-            </a>
-          ))}
-        </div>
-      ) : (
-        <p class="partner-empty">Les logos des partenaires et financeurs seront affichés ici dès leur publication dans Strapi.</p>
-      )}
-    </Container>
-  </section>
-
-  <section class="association-membership" id="adhesion">
-    <Container size="wide">
-      <div class="association-membership__panel">
+      <div class="association-support__panel">
         <div>
-          <p class="c-eyebrow">Faire vivre le projet</p>
-          <h2>Rejoindre Le Coven</h2>
-          <p>Adhérez à l’association, soutenez ses actions et participez à une aventure culturelle collective.</p>
+          <p class="c-eyebrow">Nous soutenir</p>
+          <h2>Faites grandir le Coven</h2>
+          <p>Chaque achat et chaque don participe directement au développement de nos projets culturels.</p>
         </div>
-        <Button
-          href={import.meta.env.PUBLIC_HELLOASSO_URL ?? "https://www.helloasso.com/associations/le-coven"}
-          size="lg"
-        >Adhérer avec HelloAsso</Button>
+        <div class="association-support__actions">
+          <a class="c-button c-button--secondary c-button--lg" href={shopUrl} target="_blank" rel="noopener noreferrer">Voir la boutique ↗</a>
+          <a class="c-button c-button--primary c-button--lg" href={donateUrl} target="_blank" rel="noopener noreferrer">Faire un don ↗</a>
+        </div>
       </div>
     </Container>
   </section>

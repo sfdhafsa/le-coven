@@ -6,6 +6,10 @@ import Container from "../components/ui/Container.astro";
 const STRAPI_URL = (import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337").replace(/\/$/, "");
 const NEWSLETTER_URL = import.meta.env.PUBLIC_NEWSLETTER_URL
   ?? "https://b1c9556b.sibforms.com/serve/MUIFAMlvCQnwKT0TDIq_Q19GZh_j3QaprDfIsgk6mYmClCb-xg9eSvVnhZWFa_D9FidD5awxnmydpZs1VFneOx_YpqY55umNSfm5EAWdAEFAi4AjXOFTLSybMcCOTI4UB0nUWnkVopLhEeF1qGdzkztAYpM5MA2giy4qd2CRfJPjwrn9y4km8Wd7Y5XI93lf30-aigv51zJ5XUkHzQ==";
+const DONATE_URL = import.meta.env.PUBLIC_DONATE_URL
+  ?? "https://www.helloasso.com/associations/le-coven/formulaires/1";
+const SHOP_URL = import.meta.env.PUBLIC_SHOP_URL
+  ?? "https://www.helloasso.com/associations/le-coven/boutiques/blue-moon-festival";
 
 interface Media {
   url?: string;
@@ -96,7 +100,7 @@ const formatDate = (date: string | null) => date
       <div class="home-logo-lockup" aria-label="Logo Le Coven">
         <span class="home-logo-lockup__orbit" aria-hidden="true"></span>
         <img
-          src="/images/logo-le-coven.jpeg"
+          src="/images/logo-le-coven-v2.png"
           alt="Le Coven, croissants de lune entourant la lettre V"
           width="288"
           height="288"
@@ -108,8 +112,16 @@ const formatDate = (date: string | null) => date
         Association culturelle <span aria-hidden="true">·</span> Musique électronique
       </p>
 
-      <h1 class="hero-title bg-gradient-to-r from-fuchsia-400 via-violet-50 to-fuchsia-400 bg-clip-text text-[clamp(4.5rem,14vw,11rem)] font-black leading-[0.82] tracking-[-0.075em] text-transparent">
-        Le Coven
+      <h1 class="hero-wordmark">
+        <span class="sr-only">Le Coven</span>
+        <img
+          src="/images/le-coven-wordmark.png"
+          alt=""
+          width="551"
+          height="207"
+          fetchpriority="high"
+          aria-hidden="true"
+        />
       </h1>
 
       <p class="mt-10 max-w-2xl text-base leading-8 text-violet-100/65 sm:text-lg">
@@ -163,6 +175,28 @@ const formatDate = (date: string | null) => date
         ))}
       </div>
       <div class="home-section-link"><Button href="/events" variant="ghost">Voir tous les événements →</Button></div>
+    </Container>
+  </section>
+
+  <section class="home-donation" id="nous-soutenir" aria-labelledby="home-donation-title">
+    <Container size="wide">
+      <div class="home-donation__panel">
+        <div class="home-donation__copy">
+          <p class="c-eyebrow">Nous soutenir</p>
+          <h2 id="home-donation-title">Chaque don fait vivre nos événements</h2>
+          <p>Votre soutien nous aide à rémunérer les artistes, accueillir les publics et développer de nouveaux projets culturels dans les Hauts-de-France.</p>
+        </div>
+        <div class="home-donation__actions">
+          <a class="home-donation__button home-donation__button--shop" href={SHOP_URL} target="_blank" rel="noopener noreferrer">
+            Découvrir la boutique
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a class="home-donation__button" href={DONATE_URL} target="_blank" rel="noopener noreferrer">
+            Faire un don
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
     </Container>
   </section>
 

@@ -8,6 +8,7 @@ let unavailable = false;
 try { events = await getEvents(); } catch (error) { unavailable = true; console.warn("[events]", error instanceof Error ? error.message : "API unavailable"); }
 const upcoming = events.filter(event => !isPast(event));
 const past = events.filter(isPast).reverse();
+const helloAssoWidgetUrl = import.meta.env.PUBLIC_HELLOASSO_WIDGET_URL?.trim();
 ---
 <BaseLayout title="Événements — Le Coven" description="Concerts, soirées, festivals et rencontres : retrouvez l’agenda du Coven et de ses collectifs.">
   <header class="events-hero">
@@ -20,6 +21,26 @@ const past = events.filter(isPast).reverse();
       <div class="events-heading"><div><p class="event-eyebrow">On se retrouve bientôt</p><h2 id="upcoming-title">Les prochains rendez-vous</h2></div>{past.length > 0 && <a class="event-link" href="#archives">Voir les événements passés ↓</a>}</div>
       {unavailable ? <div class="events-empty"><h3>L’agenda est momentanément indisponible</h3><p>Merci de revenir un peu plus tard pour découvrir nos prochains rendez-vous.</p><a class="event-link" href="/contact">Nous contacter ↗</a></div> : upcoming.length ? <div class="events-grid">{upcoming.map(event => <EventCard event={event} />)}</div> : <div class="events-empty"><span aria-hidden="true">✦</span><h3>La suite s’écrit ensemble.</h3><p>De nouveaux rendez-vous arrivent. Revenez bientôt découvrir la programmation.</p></div>}
     </section>
-    {past.length > 0 && <section id="archives" aria-labelledby="past-title"><div class="events-heading"><div><p class="event-eyebrow">Les nuits qu’on garde en mémoire</p><h2 id="past-title">Événements passés</h2></div></div><div class="events-grid">{past.map(event => <EventCard event={event} />)}</div></section>}
+    <section id="archives" aria-labelledby="past-title">
+      <div class="events-heading"><div><p class="event-eyebrow">Les nuits qu’on garde en mémoire</p><h2 id="past-title">Événements passés</h2></div></div>
+      {past.length > 0 ? (
+        <div class="events-grid">{past.map(event => <EventCard event={event} />)}</div>
+      ) : (
+        <div class="events-empty"><span aria-hidden="true">✦</span><h3>Les souvenirs arrivent bientôt.</h3><p>Les événements terminés seront automatiquement classés dans cette section.</p></div>
+      )}
+    </section>
+    {helloAssoWidgetUrl && (
+      <section class="events-ticketing" aria-labelledby="ticketing-title">
+        <div class="events-heading"><div><p class="event-eyebrow">Réserver</p><h2 id="ticketing-title">Billetterie HelloAsso</h2></div></div>
+        <iframe
+          id="haWidget"
+          class="events-ticketing__widget"
+          src={helloAssoWidgetUrl}
+          title="Billetterie Le Coven sur HelloAsso"
+          allow="payment 'self' https://paymenthub.helloassopay.com https://helloasso.com"
+          loading="lazy"
+        ></iframe>
+      </section>
+    )}
   </div>
 </BaseLayout>

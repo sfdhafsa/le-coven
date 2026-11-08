@@ -40,3 +40,14 @@
 @media(max-width:950px){.events-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.event-detail__columns{grid-template-columns:minmax(0,1fr) 300px;gap:28px}}
 @media(max-width:640px){.events-hero{min-height:300px}.events-hero__star{width:400px;height:400px}.events-content{padding:44px 20px 64px}.events-grid,.event-detail__columns{grid-template-columns:1fr}.events-heading{align-items:start;flex-direction:column}.event-detail__header{padding-top:32px}.event-detail__columns{margin-top:32px}.event-info{padding:24px}}
 @media(prefers-reduced-motion:reduce){.event-card{transition:none}.event-card:hover{transform:none}}
+.events-ticketing {
+  margin-top: clamp(4rem, 8vw, 7rem);
+}
+
+.events-ticketing__widget {
+  width: 100%;
+  min-height: 750px;
+  border: 0;
+  border-radius: 1.5rem;
+  background: white;
+}

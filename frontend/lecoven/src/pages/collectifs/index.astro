@@ -1,0 +1,65 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Container from "../../components/ui/Container.astro";
+
+const STRAPI_URL = (import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337").replace(/\/$/, "");
+interface Media { url?: string; alternativeText?: string | null }
+interface Collective {
+  nom: string;
+  descriptionCourte?: string | null;
+  styleMusical?: string | null;
+  logo?: Media | null;
+  siteWeb?: string | null;
+  instagram?: string | null;
+  facebook?: string | null;
+  ordreAffichage?: number | null;
+  actif?: boolean | null;
+}
+let collectifs: Collective[] = [];
+try {
+  const response = await fetch(`${STRAPI_URL}/api/collectives?populate=logo&sort=ordreAffichage:asc&pagination[pageSize]=100`);
+  if (response.ok) {
+    const payload: { data?: Collective[] } = await response.json();
+    collectifs = (payload.data ?? []).filter((item) => item.actif !== false);
+  }
+} catch { collectifs = []; }
+const mediaUrl = (media?: Media | null) => media?.url
+  ? (media.url.startsWith("http") ? media.url : `${STRAPI_URL}${media.url}`)
+  : undefined;
+const externalUrl = (collectif: Collective) => collectif.siteWeb || collectif.instagram || collectif.facebook || undefined;
+---
+
+<BaseLayout title="La Fédération — Le Coven" description="Découvrez les collectifs de musiques électroniques réunis au sein de la Fédération Le Coven.">
+  <header class="directory-hero">
+    <Container size="wide">
+      <p class="c-eyebrow">La Fédération</p>
+      <h1>Nos collectifs</h1>
+      <p>Dix identités artistiques des Hauts-de-France réunies pour créer, transmettre et faire vibrer les cultures électroniques.</p>
+    </Container>
+  </header>
+  <section class="directory-section">
+    <Container size="wide">
+      {collectifs.length > 0 ? (
+        <div class="directory-grid">
+          {collectifs.map((collectif) => {
+            const href = externalUrl(collectif);
+            const content = (
+              <>
+                <div class="directory-card__logo">
+                  {mediaUrl(collectif.logo) ? <img src={mediaUrl(collectif.logo)} alt={collectif.logo?.alternativeText || `Logo ${collectif.nom}`} loading="lazy" /> : <span aria-hidden="true">✦</span>}
+                </div>
+                <div>
+                  <h2>{collectif.nom}</h2>
+                  {collectif.styleMusical && <p class="directory-card__genre">{collectif.styleMusical}</p>}
+                  {collectif.descriptionCourte && <p>{collectif.descriptionCourte}</p>}
+                  {href && <span class="directory-card__link">Découvrir le collectif ↗</span>}
+                </div>
+              </>
+            );
+            return href ? <a class="directory-card" href={href} target="_blank" rel="noopener noreferrer">{content}</a> : <article class="directory-card">{content}</article>;
+          })}
+        </div>
+      ) : <p class="directory-empty">Les collectifs seront bientôt présentés ici.</p>}
+    </Container>
+  </section>
+</BaseLayout>

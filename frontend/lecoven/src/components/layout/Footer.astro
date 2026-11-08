@@ -2,10 +2,10 @@
 import Container from "../ui/Container.astro";
 
 const currentYear = new Date().getFullYear();
-const licenceNumbers = (import.meta.env.PUBLIC_LICENCE_NUMBERS ?? "PLATESV-D-2024-006881,3-011359")
-  .split(",")
-  .map((licence: string) => licence.trim())
-  .filter(Boolean);
+const helloAssoUrl = import.meta.env.PUBLIC_HELLOASSO_URL ?? "https://www.helloasso.com/associations/le-coven";
+const shotgunUrl = import.meta.env.PUBLIC_SHOTGUN_URL ?? "https://shotgun.live/fr/festivals/blue-moon";
+const shopUrl = import.meta.env.PUBLIC_SHOP_URL ?? "https://www.helloasso.com/associations/le-coven/boutiques/blue-moon-festival";
+const donateUrl = import.meta.env.PUBLIC_DONATE_URL ?? "https://www.helloasso.com/associations/le-coven/formulaires/1";
 ---
 
 <footer class="site-footer">
@@ -16,14 +16,15 @@ const licenceNumbers = (import.meta.env.PUBLIC_LICENCE_NUMBERS ?? "PLATESV-D-202
         <a href={import.meta.env.PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/lecoven.asso/"} rel="noreferrer" target="_blank">Instagram</a>
         <a href={import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook.com/LeCoven.asso"} rel="noreferrer" target="_blank">Facebook</a>
         <a href="https://linktr.ee/LeCoven.asso" rel="noreferrer" target="_blank">Tous les liens</a>
+        <a href={helloAssoUrl} rel="noreferrer" target="_blank">HelloAsso</a>
+        <a href={shotgunUrl} rel="noreferrer" target="_blank">Shotgun</a>
+        <a href={shopUrl} rel="noreferrer" target="_blank">Boutique</a>
+        <a href={donateUrl} rel="noreferrer" target="_blank">Faire un don</a>
       </nav>
-      {licenceNumbers.length > 0 && (
-        <p class="footer-licences">Licences : {licenceNumbers.join(" · ")}</p>
-      )}
       <nav class="footer-legal" aria-label="Liens légaux">
         <a href="/mentions-legales">Mentions légales</a>
       </nav>
-      <p class="footer-copyright">© {currentYear} Le Coven — RNA W595043038</p>
+      <p class="footer-copyright">© {currentYear} Le Coven</p>
     </div>
   </Container>
 </footer>
