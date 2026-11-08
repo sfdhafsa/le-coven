@@ -1,0 +1,57 @@
+---
+const { href = "/" } = Astro.props;
+---
+
+<a class="brand" href={href}>
+  <img src="/images/logo-le-coven-v2.png" alt="" width="42" height="42" />
+  <span class="brand-copy">
+    <span>
+      <strong>BLUE MOON</strong>
+      <small>Festival</small>
+    </span>
+    <small data-festival-date hidden></small>
+  </span>
+</a>
+
+<script>
+  import { editionDates } from "../lib/edition-dates";
+  import { getNextEdition } from "../lib/strapi";
+
+  const dateLabel = document.querySelector<HTMLElement>("[data-festival-date]");
+  if (dateLabel) {
+    getNextEdition().then(edition => {
+      const dates = editionDates(edition?.dateDebut, edition?.dateFin);
+      if (dates) {
+        dateLabel.textContent = dates;
+        dateLabel.hidden = false;
+      }
+    }).catch(error => console.error("Blue Moon : date du festival indisponible.", error));
+  }
+</script>
+
+<style>
+  .brand-copy {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+  }
+
+  .brand {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .brand img {
+    flex: none;
+    object-fit: contain;
+  }
+
+  .brand-copy > span {
+    white-space: nowrap;
+  }
+
+  [data-festival-date][hidden] {
+    display: none;
+  }
+</style>
