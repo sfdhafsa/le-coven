@@ -41,13 +41,28 @@ const ticketUrl = import.meta.env.PUBLIC_TICKETING_URL;
       <section class="next-edition">
         <div class="shell edition-card">
           <div><p class="eyebrow">La prochaine lune approche</p><h2>Prochaine édition</h2><p>Dates, lieu, programmation et billetterie seront révélés prochainement.</p></div>
-          <a class="button button-primary" href={import.meta.env.PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/lecoven.asso/"} target="_blank" rel="noreferrer">Suivre les annonces <span aria-hidden="true">↗</span></a>
+          <div>
+            <p class="festival-countdown" data-festival-countdown="festival-announcements" hidden>
+              Début du festival dans <strong></strong>
+            </p>
+            <div id="festival-announcements">
+              <a class="button button-primary" href={import.meta.env.PUBLIC_INSTAGRAM_URL ?? "https://www.instagram.com/lecoven.asso/"} target="_blank" rel="noreferrer">Suivre les annonces <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
         </div>
       </section>
 
 </BaseLayout>
 
+<script>
+  import { mountFestivalCountdown } from "../../../blue-moon/src/lib/edition-dates";
+  mountFestivalCountdown();
+</script>
+
 <style>
+  .festival-countdown { margin: 0; font-variant-numeric: tabular-nums; }
+  .festival-countdown strong { display: block; font-size: clamp(1.5rem, 4vw, 2.5rem); }
+
 /* Let narrow viewports accommodate the browser's scrollbar. */
 :global(body) { min-width: 0; }
 .shell { width: calc(100% - 2 * clamp(1.25rem, 4vw, 3rem)); max-width: 84rem; min-width: 0; margin-inline: auto; }

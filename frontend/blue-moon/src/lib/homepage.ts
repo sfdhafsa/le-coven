@@ -1,5 +1,5 @@
 import { editionDates } from "./edition-dates";
-import { getNextEdition, getSettings, mediaUrl } from "./strapi";
+import { getNextEdition, getSettings, mediaUrl, safeUrl } from "./strapi";
 
 const element = (id: string) => document.getElementById(id)!;
 function text(id: string, value?: string) {
@@ -17,7 +17,14 @@ async function loadEdition() {
   text("next-edition-name", edition.nom);
   text("next-edition-meta", editionMeta);
   text("next-edition-description", edition.descriptionCourte);
-  element("prochaine-edition").hidden = false;
+  for (const [id, url] of [["festival-merch", edition.lienBoutique], ["festival-facebook", edition.lienEvenementFacebook]]) {
+    const link = document.querySelector<HTMLAnchorElement>(`#${id}`)!;
+    const href = safeUrl(url);
+    if (href) {
+      link.href = href;
+      link.hidden = false;
+    }
+  }
   const cover = mediaUrl(edition.imageCouverture);
   const hero = document.querySelector<HTMLElement>(".hero-image")!;
   hero.replaceChildren();

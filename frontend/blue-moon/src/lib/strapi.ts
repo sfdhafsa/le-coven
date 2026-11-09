@@ -4,6 +4,8 @@ export interface Block { type: string; text?: string; url?: string; level?: numb
 export interface Edition {
   documentId: string; nom: string; annee: number; dateDebut?: string; dateFin?: string;
   descriptionCourte?: string; imageCouverture?: Media; lienBilletterie?: string; lienBenevolat?: string;
+  lienBoutique?: string;
+  lienEvenementFacebook?: string;
   lieux?: { nom: string; ville?: string; adresse?: string; codePostal?: string; informationsAcces?: string; lienCarte?: string }[];
 }
 export interface Settings {
