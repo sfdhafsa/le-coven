@@ -1,19 +1,11 @@
-import { getNextEdition, getSettings, mediaUrl } from "./strapi";
+import { editionDates } from "./edition-dates";
+import { getNextEdition, getSettings, mediaUrl, safeUrl } from "./strapi";
 
 const element = (id: string) => document.getElementById(id)!;
 function text(id: string, value?: string) {
   const target = element(id);
   target.textContent = value || "";
   target.hidden = !value;
-}
-function date(value: string) {
-  return new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeZone: "Europe/Paris" }).format(new Date(`${value}T12:00:00Z`));
-}
-function editionDates(start?: string, end?: string) {
-  if (start && end) return start === end ? date(start) : `${date(start)} – ${date(end)}`;
-  if (start) return `À partir du ${date(start)}`;
-  if (end) return `Jusqu’au ${date(end)}`;
-  return undefined;
 }
 async function loadEdition() {
   const edition = await getNextEdition();
@@ -25,7 +17,14 @@ async function loadEdition() {
   text("next-edition-name", edition.nom);
   text("next-edition-meta", editionMeta);
   text("next-edition-description", edition.descriptionCourte);
-  element("prochaine-edition").hidden = false;
+  for (const [id, url] of [["festival-merch", edition.lienBoutique], ["festival-facebook", edition.lienEvenementFacebook]]) {
+    const link = document.querySelector<HTMLAnchorElement>(`#${id}`)!;
+    const href = safeUrl(url);
+    if (href) {
+      link.href = href;
+      link.hidden = false;
+    }
+  }
   const cover = mediaUrl(edition.imageCouverture);
   const hero = document.querySelector<HTMLElement>(".hero-image")!;
   hero.replaceChildren();

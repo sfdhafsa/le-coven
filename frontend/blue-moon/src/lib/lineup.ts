@@ -3,17 +3,19 @@ import { collection, getNextEdition, mediaUrl } from "./strapi";
 interface Artist {
   documentId: string;
   nom: string;
-  slug: string;
   genres?: string;
-  biographieCourte?: string;
+  lienSoundcloud?: string;
+  lienSpotify?: string;
   imageProfil?: { url: string; mime?: string };
 }
-interface Performance { artiste?: Artist | null }
+interface Performance { artiste?: Artist | null; dateHeureDebut?: string }
+
+const dayFormatter = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Paris", dateStyle: "short" });
 export async function getLineup() {
   const edition = await getNextEdition();
   if (!edition) return [];
 
-  const artists = new Map<string, Artist & { imageUrl?: string }>();
+  const days = new Map<string, Map<string, Artist & { imageUrl?: string }>>();
   let page = 1;
   let pageCount = 1;
   do {
@@ -28,13 +30,20 @@ export async function getLineup() {
       "pagination[pageSize]": "100",
       "pagination[page]": String(page),
     });
-    for (const { artiste } of result.data) {
-      if (!artiste?.documentId || !artiste.nom || artists.has(artiste.documentId)) continue;
+    for (const { artiste, dateHeureDebut } of result.data) {
+      if (!artiste?.documentId || !artiste.nom) continue;
+      const day = dateHeureDebut ? dayFormatter.format(new Date(dateHeureDebut)) : "";
+      const artists = days.get(day) ?? new Map();
+      days.set(day, artists);
+      if (artists.has(artiste.documentId)) continue;
       const imageUrl = mediaUrl(artiste.imageProfil);
       artists.set(artiste.documentId, { ...artiste, imageUrl });
     }
     pageCount = result.meta?.pagination?.pageCount || 1;
     page++;
   } while (page <= pageCount);
-  return [...artists.values()];
+  return [...days.keys()].sort().filter(Boolean).concat(days.has("") ? [""] : []).map(day => ({
+    day,
+    artists: [...days.get(day)!.values()],
+  }));
 }

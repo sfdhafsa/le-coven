@@ -1,10 +1,11 @@
 ---
+import FestivalBrand from "../components/FestivalBrand.astro";
 import "../styles/global.css";
-import ArtistLineup from "../components/ArtistLineup.astro";
 const covenUrl = (import.meta.env.PUBLIC_COVEN_URL || "http://localhost:4321").replace(/\/$/, "");
 const ticketUrl = "/billetterie";
 const links = [
   { label: "Accueil", href: "#accueil" },
+  { label: "Line-up", href: "/line-up" },
   { label: "Infos pratiques", href: "/infos-pratiques" },
   { label: "Billetterie", href: ticketUrl },
 ];
@@ -22,10 +23,7 @@ const links = [
     <a class="skip-link" href="#main">Aller au contenu</a>
     <header class="site-header">
       <nav class="site-nav" aria-label="Navigation principale">
-        <a class="brand" href="#accueil" aria-label="Blue Moon, accueil">
-          <img src="/images/logo-le-coven.jpeg" alt="" width="42" height="42" />
-          <span><strong>Blue Moon</strong><small>Festival</small></span>
-        </a>
+        <FestivalBrand href="#accueil" />
         <ul class="desktop-nav">{links.map((link, i) => <li><a href={link.href} class:list={["nav-link", i === 0 && "is-active"]} aria-current={i === 0 ? "page" : undefined}>{link.label}</a></li>)}</ul>
         <div class="header-actions">
           <a class="button button-primary header-ticket" href={ticketUrl}>Billetterie <span aria-hidden="true">↗</span></a>
@@ -45,23 +43,45 @@ const links = [
         <span class="star star-one" aria-hidden="true"></span><span class="star star-two" aria-hidden="true"></span><span class="star star-three" aria-hidden="true"></span><span class="star star-four" aria-hidden="true"></span>
         <div class="hero-content">
           <p class="festival-meta" id="edition-meta" hidden></p>
-          <h1 id="festival-title"><span>Blue</span><span>Moon</span></h1>
-          <p class="festival-label">Festival · Une production Le Coven</p>
+          <h1 id="festival-title">
+            <img src="/images/blue-moon-title.png" alt="Blue Moon Festival" width="343" height="262" />
+          </h1>
+          <p class="festival-label">Une production Le Coven</p>
           <p id="edition-description" class="cms-description" hidden></p>
         </div>
       </section>
-      <section class="next-edition section-shell" id="prochaine-edition" aria-labelledby="next-edition-title" hidden>
+      <section class="next-edition section-shell" id="prochaine-edition" aria-labelledby="next-edition-title">
         <div class="section-heading">
           <p class="eyebrow">Le prochain rendez-vous</p>
           <h2 id="next-edition-title">Prochaine édition</h2>
         </div>
         <div class="next-edition-card">
-          <h3 id="next-edition-name"></h3>
-          <p class="next-edition-meta" id="next-edition-meta"></p>
-          <p class="next-edition-description" id="next-edition-description" hidden></p>
+          <div class="festival-countdown" data-festival-countdown="next-edition-details" hidden>
+            <div class="countdown-intro">
+              <div>
+                <h3 class="countdown-wordmark">Blue Moon</h3>
+                <p class="countdown-date">Rendez-vous le <time data-countdown-date></time></p>
+              </div>
+              <a class="button button-outline countdown-ticket" href={ticketUrl}>Billetterie <span aria-hidden="true">↗</span></a>
+            </div>
+            <div class="countdown-units" role="timer">
+              <div><strong data-countdown-unit></strong><span>Jours</span></div>
+              <div><strong data-countdown-unit></strong><span>Heures</span></div>
+              <div><strong data-countdown-unit></strong><span>Minutes</span></div>
+              <div class="countdown-seconds"><strong data-countdown-unit></strong><span>Secondes</span></div>
+            </div>
+          </div>
+          <div id="next-edition-details">
+            <h3 id="next-edition-name"></h3>
+            <p id="next-edition-meta" class="next-edition-meta"></p>
+            <p id="next-edition-description" class="next-edition-description" hidden></p>
+          </div>
+          <div class="story-sources">
+            <a id="festival-merch" target="_blank" rel="noopener noreferrer" hidden>Boutique du festival ↗</a>
+            <a id="festival-facebook" target="_blank" rel="noopener noreferrer" hidden>Événement Facebook ↗</a>
+          </div>
         </div>
       </section>
-      <ArtistLineup />
       <section class="festival-story section-shell" id="origine" aria-labelledby="origin-title">
         <div class="story-heading">
           <p class="eyebrow">L’esprit du festival</p>
@@ -82,6 +102,8 @@ const links = [
     <footer class="section-shell"><span>Blue Moon · Une production Le Coven</span><a href={covenUrl + "/mentions-legales"}>Mentions légales ↗</a></footer>
     <noscript><p class="section-shell">Activez JavaScript pour charger les informations du festival.</p></noscript>
     <script>
+      import { mountFestivalCountdown } from "../lib/edition-dates";
+      mountFestivalCountdown();
       import "../lib/homepage";
       const menuButton = document.querySelector<HTMLButtonElement>(".menu-toggle");
       const menu = document.querySelector<HTMLElement>("#mobile-nav");
@@ -93,3 +115,103 @@ const links = [
     </script>
   </body>
 </html>
+
+<style>
+  .next-edition-card {
+    max-width: none;
+    border-color: #238092;
+    background: radial-gradient(ellipse at top right, #00566890, transparent 70%), #080917;
+    box-shadow: 0 0 44px #00d8e51c, inset 0 1px #9cffff33;
+  }
+
+  .countdown-intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: clamp(22px, 4vw, 36px);
+  }
+
+  .countdown-date { margin: 8px 0 0; color: var(--muted); }
+  .countdown-intro .countdown-wordmark {
+    margin: 0;
+    color: #b7ffff;
+    font-family: "Black Chancery", "Palatino Linotype", Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: .035em;
+    text-shadow: 0 0 .32em #00e4ea66;
+  }
+  .countdown-ticket { min-height: 42px; padding: 8px 18px; color: #9cffff; }
+
+  .countdown-units {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(6px, 2vw, 16px);
+    text-align: center;
+  }
+
+  .countdown-units > div {
+    padding: clamp(18px, 4vw, 44px) 4px;
+    border: 1px solid #165365;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #072631, #07111e);
+  }
+
+  .countdown-units strong {
+    display: block;
+    color: #9cffff;
+    font-size: clamp(28px, 8vw, 100px);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    text-shadow: 0 0 .3em #00e4ea55;
+  }
+
+  .countdown-units span {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: clamp(9px, 1.6vw, 12px);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .countdown-units .countdown-seconds {
+    border-color: #25899a;
+    animation: countdown-glow 1s ease-out infinite;
+  }
+
+  @keyframes countdown-glow {
+    from { box-shadow: inset 0 0 24px #00e4ea44; }
+    to { box-shadow: inset 0 0 8px #00e4ea08; }
+  }
+
+  @media (max-width: 540px) {
+    .countdown-units { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .countdown-units .countdown-seconds { animation: none; }
+  }
+
+  .hero {
+    background: #000;
+  }
+
+  .hero-glow {
+    background: radial-gradient(ellipse at center, #00384755, transparent 68%);
+  }
+
+  #festival-title {
+    width: min(100%, 480px);
+  }
+
+  #festival-title img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

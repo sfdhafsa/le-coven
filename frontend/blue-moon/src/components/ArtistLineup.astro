@@ -1,61 +1,100 @@
-<section class="lineup section-shell" id="artistes" aria-labelledby="lineup-title" hidden>
+<section class="lineup section-shell" aria-labelledby="lineup-title">
   <div class="section-heading">
     <p class="eyebrow">La programmation</p>
-    <h2 id="lineup-title">Artistes à l’affiche</h2>
+    <h1 id="lineup-title">Line-up</h1>
   </div>
-  <ul id="lineup-grid" class="lineup-grid" aria-label="Artistes du festival"></ul>
+  <p id="lineup-status" role="status">Chargement de la programmation…</p>
+  <div id="lineup-days"></div>
 </section>
 
 <script>
   import { getLineup } from "../lib/lineup";
+  import { editionDates } from "../lib/edition-dates";
+  import { getNextEdition, safeUrl } from "../lib/strapi";
 
-  const section = document.querySelector<HTMLElement>("#artistes")!;
-  const grid = document.querySelector<HTMLUListElement>("#lineup-grid")!;
+  const days = document.querySelector<HTMLElement>("#lineup-days")!;
+  const status = document.querySelector<HTMLElement>("#lineup-status")!;
+  const dayLabel = new Intl.DateTimeFormat("fr-FR", {
+    weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Paris",
+  });
 
   async function load() {
     try {
-      const artists = await getLineup();
-      const cards = artists.map(artist => {
-        const card = document.createElement("li");
-        card.className = "artist-card";
-        const link = document.createElement("a");
-        link.className = "artist-card-link";
-        link.href = `/artistes/${encodeURIComponent(artist.slug)}`;
-        link.setAttribute("aria-label", `Découvrir ${artist.nom}`);
-        const portrait = document.createElement("div");
-        portrait.className = "artist-portrait";
-        if (artist.imageUrl) {
-          const image = document.createElement("img");
-          image.src = artist.imageUrl;
-          image.alt = "";
-          image.loading = "lazy";
-          image.width = 600;
-          image.height = 600;
-          image.addEventListener("error", () => image.remove(), { once: true });
-          portrait.append(image);
-        }
-        const copy = document.createElement("div");
-        copy.className = "artist-copy";
-        const title = document.createElement("h3");
-        title.textContent = artist.nom;
-        copy.append(title);
-        for (const [className, text] of [["artist-genres", artist.genres], ["artist-bio", artist.biographieCourte]]) {
-          if (!text) continue;
-          const paragraph = document.createElement("p");
-          paragraph.className = className;
-          paragraph.textContent = text;
-          copy.append(paragraph);
-        }
-        link.append(portrait, copy);
-        card.append(link);
-        return card;
-      });
-      grid.replaceChildren(...cards);
-      section.hidden = !cards.length;
+      const lineup = await getLineup();
+      const edition = await getNextEdition();
+      const festivalDates = editionDates(edition?.dateDebut, edition?.dateFin);
+      for (const { day, artists } of lineup) {
+        const heading = document.createElement("h2");
+        heading.className = "lineup-date";
+        heading.textContent = day
+          ? dayLabel.format(new Date(day + "T12:00:00Z"))
+          : festivalDates ?? "Programmation du festival";
+        const grid = document.createElement("ul");
+        grid.className = "lineup-grid";
+        grid.append(...artists.map(artist => {
+          const card = document.createElement("li");
+          card.className = "artist-card";
+          const portrait = document.createElement("div");
+          portrait.className = "artist-portrait";
+          if (artist.imageUrl) {
+            const image = document.createElement("img");
+            image.src = artist.imageUrl;
+            image.alt = "";
+            image.loading = "lazy";
+            image.width = 600;
+            image.height = 600;
+            image.addEventListener("error", () => image.remove(), { once: true });
+            portrait.append(image);
+          }
+          const copy = document.createElement("div");
+          copy.className = "artist-copy";
+          const title = document.createElement("h3");
+          title.textContent = artist.nom;
+          copy.append(title);
+          if (artist.genres) {
+            const paragraph = document.createElement("p");
+            paragraph.className = "artist-genres";
+            paragraph.textContent = artist.genres;
+            copy.append(paragraph);
+          }
+          for (const [platform, url] of [["SoundCloud", artist.lienSoundcloud], ["Spotify", artist.lienSpotify]]) {
+            const href = safeUrl(url);
+            if (!href) continue;
+            const link = document.createElement("a");
+            link.className = "artist-listen";
+            link.href = href;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = platform + " ↗";
+            link.setAttribute("aria-label", `Écouter ${artist.nom} sur ${platform} (nouvel onglet)`);
+            copy.append(link);
+          }
+          card.append(portrait, copy);
+          return card;
+        }));
+        days.append(heading, grid);
+      }
+      status.textContent = lineup.length ? "" : "La programmation sera annoncée prochainement.";
     } catch (error) {
       console.error("Blue Moon: impossible de charger les artistes.", error);
-      section.hidden = true;
+      status.textContent = "La programmation est temporairement indisponible.";
     }
   }
   void load();
 </script>
+
+<style>
+  .lineup {
+    padding-block-start: clamp(24px, 4vw, 48px);
+  }
+
+  .lineup :global(.lineup-date) {
+    font-size: clamp(16px, 2.5vw, 22px);
+    margin-block: 24px 12px;
+  }
+
+  h1 {
+    font-size: clamp(40px, 8vw, 76px);
+    line-height: 1.1;
+  }
+</style>

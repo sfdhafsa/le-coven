@@ -1,10 +1,12 @@
 ---
+import FestivalBrand from "../components/FestivalBrand.astro";
 import "../styles/global.css";
 import PracticalInformation from "../components/PracticalInformation.astro";
 
 const covenUrl = (import.meta.env.PUBLIC_COVEN_URL || "http://localhost:4321").replace(/\/$/, "");
 const links = [
   { label: "Accueil", href: "/" },
+  { label: "Line-up", href: "/line-up" },
   { label: "Infos pratiques", href: "/infos-pratiques" },
   { label: "Billetterie", href: "/billetterie" },
 ];
@@ -23,10 +25,7 @@ const links = [
     <a class="skip-link" href="#main">Aller au contenu</a>
     <header class="site-header">
       <nav class="site-nav" aria-label="Navigation principale">
-        <a class="brand" href="/" aria-label="Blue Moon, accueil">
-          <img src="/images/logo-le-coven.jpeg" alt="" width="42" height="42" />
-          <span><strong>Blue Moon</strong><small>Festival</small></span>
-        </a>
+        <FestivalBrand />
         <ul class="desktop-nav">
           {links.map(link => (
             <li>
