@@ -43,8 +43,10 @@ const links = [
         <span class="star star-one" aria-hidden="true"></span><span class="star star-two" aria-hidden="true"></span><span class="star star-three" aria-hidden="true"></span><span class="star star-four" aria-hidden="true"></span>
         <div class="hero-content">
           <p class="festival-meta" id="edition-meta" hidden></p>
-          <h1 id="festival-title"><span>Blue</span><span>Moon</span></h1>
-          <p class="festival-label">Festival · Une production Le Coven</p>
+          <h1 id="festival-title">
+            <img src="/images/blue-moon-title.png" alt="Blue Moon Festival" width="343" height="262" />
+          </h1>
+          <p class="festival-label">Une production Le Coven</p>
           <p id="edition-description" class="cms-description" hidden></p>
         </div>
       </section>
@@ -90,3 +92,23 @@ const links = [
     </script>
   </body>
 </html>
+
+<style>
+  .hero {
+    background: #000;
+  }
+
+  .hero-glow {
+    background: radial-gradient(ellipse at center, #00384755, transparent 68%);
+  }
+
+  #festival-title {
+    width: min(100%, 480px);
+  }
+
+  #festival-title img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>
