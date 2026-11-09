@@ -23,6 +23,7 @@ async function loadEdition() {
     if (href) {
       link.href = href;
       link.hidden = false;
+      if (id === "festival-facebook") element("festival-facebook-placeholder").hidden = true;
     }
   }
   const cover = mediaUrl(edition.imageCouverture);

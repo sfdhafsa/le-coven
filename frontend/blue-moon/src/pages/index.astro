@@ -76,9 +76,10 @@ const links = [
             <p id="next-edition-meta" class="next-edition-meta"></p>
             <p id="next-edition-description" class="next-edition-description" hidden></p>
           </div>
-          <div class="story-sources">
-            <a id="festival-merch" target="_blank" rel="noopener noreferrer" hidden>Boutique du festival ↗</a>
-            <a id="festival-facebook" target="_blank" rel="noopener noreferrer" hidden>Événement Facebook ↗</a>
+          <div class="festival-quick-links" aria-label="Accès rapides du festival">
+            <a id="festival-merch" class="button button-outline" href="https://www.helloasso.com/associations/le-coven/boutiques/blue-moon-festival" target="_blank" rel="noopener noreferrer">Boutique du festival ↗</a>
+            <a id="festival-facebook" class="button button-outline" target="_blank" rel="noopener noreferrer" hidden>Événement Facebook ↗</a>
+            <button id="festival-facebook-placeholder" class="button button-outline" type="button" disabled>Événement Facebook · bientôt</button>
           </div>
         </div>
       </section>
@@ -134,6 +135,9 @@ const links = [
   }
 
   .countdown-date { margin: 8px 0 0; color: var(--muted); }
+  .festival-quick-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+  .festival-quick-links .button { min-height: 42px; padding: 8px 18px; }
+  .festival-quick-links button:disabled { opacity: .65; cursor: default; transform: none; }
   .countdown-intro .countdown-wordmark {
     margin: 0;
     color: #b7ffff;
