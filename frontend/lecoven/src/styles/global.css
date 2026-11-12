@@ -1458,6 +1458,19 @@ body.menu-open {
   margin-top: clamp(3rem, 7vw, 5rem);
 }
 
+.contact-form__honeypot {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+
+.contact-form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .contact-form__row {
   display: grid;
   gap: 1.35rem;

@@ -24,6 +24,11 @@ const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook
         </header>
 
         <form class="contact-form" data-contact-form>
+          <label class="contact-form__honeypot" aria-hidden="true">
+            <span>Site web</span>
+            <input name="website" type="text" tabindex="-1" autocomplete="off" />
+          </label>
+
           <div class="contact-form__row">
             <label>
               <span>Nom</span>
@@ -45,7 +50,7 @@ const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook
               Envoyer
               <span aria-hidden="true">→</span>
             </Button>
-            <p class="contact-form__hint">Votre application e-mail s’ouvrira avec le message prérempli.</p>
+            <p class="contact-form__hint">Votre message sera envoyé directement à l’équipe du Coven.</p>
           </div>
           <p class="contact-form__status" aria-live="polite" data-contact-status></p>
         </form>
@@ -79,7 +84,7 @@ const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook
         </div>
 
         <p class="contact-privacy">
-          Les informations saisies servent uniquement à préparer votre message. Elles ne sont pas enregistrées sur ce site.
+          Les informations saisies servent uniquement à répondre à votre demande. Elles ne sont pas publiées sur le site.
         </p>
       </aside>
     </Container>
@@ -89,20 +94,37 @@ const facebookUrl = import.meta.env.PUBLIC_FACEBOOK_URL ?? "https://www.facebook
 <script>
   const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
   const status = document.querySelector<HTMLElement>("[data-contact-status]");
+  const submitButton = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const apiUrl = `${import.meta.env.PUBLIC_STRAPI_URL ?? "http://localhost:1337"}/api/contact`;
 
-  form?.addEventListener("submit", (event) => {
+  form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
 
     const data = new FormData(form);
-    const recipient = "lecoven@etik.com";
-    const name = String(data.get("name") ?? "");
-    const email = String(data.get("email") ?? "");
-    const message = String(data.get("message") ?? "");
-    const subject = "[Site Le Coven] Contact";
-    const body = `Nom : ${name}\nE-mail : ${email}\n\n${message}`;
+    const payload = Object.fromEntries(data.entries());
 
-    window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    if (status) status.textContent = `Message préparé pour ${recipient}.`;
+    if (submitButton) submitButton.disabled = true;
+    if (status) status.textContent = "Envoi en cours…";
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) throw new Error(result.error || "Le message n’a pas pu être envoyé.");
+
+      form.reset();
+      if (status) status.textContent = "Merci, votre message a bien été envoyé.";
+    } catch (error) {
+      if (status) status.textContent = error instanceof Error
+        ? error.message
+        : "Le message n’a pas pu être envoyé. Merci de réessayer.";
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
   });
 </script>
